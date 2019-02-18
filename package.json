@@ -16,7 +16,7 @@
     "react-scripts": "2.1.5"
   },
   "scripts": {
-    "server": "node app/main.js",
+    "server": "node --experimental-modules app/main.mjs",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
