@@ -9,6 +9,8 @@ interface SingleBranchProps {
   extraClasses: Array<string>,
 };
 
+const reservedBranches = ['master', 'lightmerge'];
+
 const SingleBranch = (props: SingleBranchProps) => {
   const [status, setStatus] = useState(props.checked);
 
@@ -17,18 +19,22 @@ const SingleBranch = (props: SingleBranchProps) => {
     props.onClick();
   }
 
-  const generateClassName = (className, extraClasses = []) => {
-    return [className, ...extraClasses].join(' ');
-  }
+  const generateClassName = (className, extraClasses = []) => [className, ...extraClasses].join(' ');
+
+  const disabled = branch => reservedBranches.includes(branch);
 
   return (
     <div className={generateClassName('SingleBranch', props.extraClasses)}>
       {
         props.isGroup
         ? <span className="Arrow" onClick={handleClick}>{ !status ? '+' : '-' }</span>
-        : <input className="Checkbox" type="checkbox" checked={status} onChange={handleClick} />
+        : (
+          !disabled(props.text)
+          ? <input className="Checkbox" type="checkbox" checked={status} onChange={handleClick} />
+          : null
+        )
       }
-      <span className="Text">{ props.text }</span>
+      <code className="Text">{ props.text }</code>
     </div>
   );
 };

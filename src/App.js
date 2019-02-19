@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import Branch from './components/BranchSelector';
+import BranchSelector from './components/BranchSelector';
+import StatusViewer from './components/StatusViewer';
 
 import './App.scss';
 
-const branches = ['master', 'lightmerge', 'lym/chatroom', 'feature/chatroom', 'feature/messagebox'];
-const originSelectedBranches: Array<string> = ['lightmerge', 'feature/chatroom'];
+const branches = ['master', 'lightmerge', 'lym/chatroom', 'lym/group-chat', 'lym/video', 'feature/chatroom', 'feature/messagebox'];
+const originSelectedBranches: Array<string> = ['lym/chatroom', 'feature/chatroom'];
 
 const App = () => {
   const [selectedBranches, setSelectedBranches] = useState(originSelectedBranches);
@@ -22,12 +23,17 @@ const App = () => {
       <header className="Header">
         <code>lightmerge</code>
       </header>
+      <div className="RepoPath">
+        <input className="Input" type="text" placeholder="Repository Path" />
+        <button className="Button" disabled>lightmerge</button>
+      </div>
       <div className="Content">
-        <Branch
+        <BranchSelector
           branchList={branches}
           alreadySelected={originSelectedBranches}
           onChange={handleBranchClick}
         />
+        <StatusViewer selectedBranches={selectedBranches} />
       </div>
     </div>
   );

@@ -1,0 +1,26 @@
+.BranchInfo {
+  font-size: 12px;
+
+  .Base,
+  .Source,
+  .Target {
+    padding: 10px 20px 0 20px;
+
+    &::after {
+      content:"";
+      clear: both;
+      display: block;
+    }
+
+    .Type {
+      float: left;
+      line-height: 22px;
+    }
+
+    
+  }
+
+  .Source {
+    background: #f7f7f7;
+  }
+}

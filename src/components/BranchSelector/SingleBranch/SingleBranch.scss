@@ -13,10 +13,11 @@
     cursor: pointer;
   }
   .Text {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   &:hover {
     background: #e8e8e8;
+    border-radius: 4px;
   }
 }

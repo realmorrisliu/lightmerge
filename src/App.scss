@@ -9,14 +9,65 @@
     color: #ffffff;
   }
 
+  .RepoPath {
+    width: 80%;
+    height: 80px;
+    min-width: 800px;
+    margin: 0 auto;
+    padding: 22px 0;
+    box-sizing: border-box;
+
+    .Input {
+      width: calc(100% - 120px);
+      height: 36px;
+      outline: none;
+      border: 0 none;
+      box-shadow: 0 2px 10px #e8e8e8;
+      border-radius: 8px;
+      padding: 0 12px;
+      box-sizing: border-box;
+    }
+
+    .Button {
+      width: 110px;
+      height: 36px;
+      padding: 0;
+      margin-left: 10px;
+      border: 0 none;
+      border-radius: 8px;
+      background: #1890ff;
+      color: #ffffff;
+      cursor: pointer;
+      outline: none;
+      box-shadow: 0 2px 10px #bfbfbf;
+      font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+
+      &:hover {
+        box-shadow: 0 3px 15px #bfbfbf;
+      }
+
+      &:active {
+        box-shadow: 0 2px 10px #bfbfbf;
+      }
+
+      &:disabled {
+        background: #e8e8e8;
+        box-shadow: 0 2px 10px #e8e8e8;
+        cursor: not-allowed;
+        color: #bfbfbf;
+      }
+    }
+  }
+
   .Content {
     width: 80%;
     height: 500px;
     min-width: 800px;
-    margin: 40px auto;
+    margin: 0 auto;
     padding: 20px;
     border-radius: 8px;
     background: #fafafa;
+    box-sizing: border-box;
     box-shadow: 0 2px 10px #e8e8e8;
     clear: both;
   }
