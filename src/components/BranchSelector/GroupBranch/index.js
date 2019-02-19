@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SingleBranch from '../SingleBranch/SingleBranch';
+import SingleBranch from '../SingleBranch';
 import './GroupBranch.scss';
 
 interface Branch {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Branch from './components/Branch/Branch';
+import Branch from './components/BranchSelector';
 
 import './App.scss';
 

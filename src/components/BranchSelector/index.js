@@ -1,7 +1,7 @@
 import React from 'react';
-import SingleBranch from '../SingleBranch/SingleBranch';
-import GroupBranch from '../GroupBranch/GroupBranch';
-import './Branch.scss';
+import SingleBranch from './SingleBranch';
+import GroupBranch from './GroupBranch';
+import './BranchSelector.scss';
 
 interface BranchProps {
   branchList: Array<string>,
