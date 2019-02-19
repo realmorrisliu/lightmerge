@@ -20,9 +20,7 @@ const App = () => {
 
   return (
     <div className="App">
-      <header className="Header">
-        <code>lightmerge</code>
-      </header>
+      
       <div className="RepoPath">
         <input className="Input" type="text" placeholder="Repository Path" />
         <button className="Button" disabled>lightmerge</button>
