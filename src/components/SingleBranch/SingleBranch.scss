@@ -1,0 +1,22 @@
+.SingleBranch {
+  padding: 0 8px;
+  height: 28px;
+  margin: 5px 0;
+  line-height: 28px;
+
+  .Arrow,
+  .Checkbox {
+    display: inline-block;
+    width: 13px;
+    text-align: center;
+    margin: 0 5px;
+    cursor: pointer;
+  }
+  .Text {
+    font-size: 16px;
+  }
+
+  &:hover {
+    background: #e8e8e8;
+  }
+}
