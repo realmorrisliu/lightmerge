@@ -5,7 +5,7 @@ import StatusViewer from './components/StatusViewer';
 import './App.scss';
 
 const branches = ['master', 'lightmerge', 'lym/chatroom', 'lym/group-chat', 'lym/video', 'feature/chatroom', 'feature/messagebox'];
-const originSelectedBranches: Array<string> = ['lym/chatroom', 'feature/chatroom'];
+const originSelectedBranches = ['lym/chatroom', 'feature/chatroom'];
 
 const App = () => {
   const [selectedBranches, setSelectedBranches] = useState(originSelectedBranches);
@@ -20,10 +20,10 @@ const App = () => {
 
   return (
     <div className="App">
-      
+
       <div className="RepoPath">
         <input className="Input" type="text" placeholder="Repository Path" />
-        <button className="Button" disabled>lightmerge</button>
+        <button type="button" className="Button" disabled>lightmerge</button>
       </div>
       <div className="Content">
         <BranchSelector
@@ -31,7 +31,7 @@ const App = () => {
           alreadySelected={originSelectedBranches}
           onChange={handleBranchClick}
         />
-        <StatusViewer selectedBranches={selectedBranches} />
+        <StatusViewer selectedBranches={selectedBranches} logs="" />
       </div>
     </div>
   );

@@ -4,7 +4,15 @@
   margin: 5px 0;
   line-height: 28px;
 
-  .Arrow,
+  .Expand {
+    border: 0 none;
+    outline: none;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+  }
+
+  .Expand,
   .Checkbox {
     display: inline-block;
     width: 13px;
