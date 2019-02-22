@@ -2,11 +2,7 @@ import React from 'react';
 import BranchBlock from './BranchBlock';
 import './BranchInfo.scss';
 
-interface BranchInfoProps {
-  selectedBranches: Array<string>,
-};
-
-const BranchInfo = (props: BranchInfoProps) => {
+const BranchInfo = (props) => {
   return (
     <div className="BranchInfo">
       <div className="Base">

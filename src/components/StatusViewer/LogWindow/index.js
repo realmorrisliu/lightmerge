@@ -1,11 +1,7 @@
 import React from 'react';
 import './LogWindow.scss';
 
-interface LogsProp {
-  logs: string,
-};
-
-const LogWindow = (props: LogsProp) => (
+const LogWindow = (props) => (
   <div className="LogWindow">
     { props.logs }
   </div>

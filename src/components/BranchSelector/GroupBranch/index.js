@@ -2,19 +2,7 @@ import React, { useState } from 'react';
 import SingleBranch from '../SingleBranch';
 import './GroupBranch.scss';
 
-interface Branch {
-  name: string,
-  checked: boolean,
-};
-
-interface GroupBranchProps {
-  text: string,
-  folded: boolean,
-  children: Array<Branch>,
-  onChildClicked: Function,
-};
-
-const GroupBranch = (props: GroupBranchProps) => {
+const GroupBranch = (props) => {
   const [status, setStatus] = useState(props.folded);
 
   const handleClick = () => {

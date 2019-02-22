@@ -1,17 +1,9 @@
 import React, { useState } from 'react';
 import './SingleBranch.scss';
 
-interface SingleBranchProps {
-  text: string,
-  checked: boolean,
-  isGroup: boolean,
-  onClick: Function,
-  extraClasses: Array<string>,
-};
-
 const reservedBranches = ['master', 'lightmerge'];
 
-const SingleBranch = (props: SingleBranchProps) => {
+const SingleBranch = (props) => {
   const [status, setStatus] = useState(props.checked);
 
   const handleClick = () => {

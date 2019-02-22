@@ -3,11 +3,7 @@ import BranchInfo from './BranchInfo';
 import LogWindow from './LogWindow';
 import './StatusViewer.scss';
 
-interface StatusViewerProps {
-  selectedBranches: Array<string>,
-};
-
-const StatusViewer = (props: StatusViewerProps) => {
+const StatusViewer = (props) => {
   return (
     <div className="StatusViewer">
       <BranchInfo selectedBranches={props.selectedBranches} />

@@ -3,24 +3,18 @@ import SingleBranch from './SingleBranch';
 import GroupBranch from './GroupBranch';
 import './BranchSelector.scss';
 
-interface BranchProps {
-  branchList: Array<string>,
-  alreadySelected: Array<string>,
-  onChange: Function,
-};
-
-const Branch = (props: BranchProps) => {
+const Branch = (props) => {
   const { branchList } = props;
   const branches = {};
   branchList.forEach((branch) => {
     const [name, sub] = branch.split('/');
-    
+
     if (!branches[name]) {
       branches[name] = {
         checked: props.alreadySelected.includes(name),
         subBranches: [],
-      }; 
-    } 
+      };
+    }
     if (sub) {
       branches[name].subBranches.push({
         name: sub,
@@ -40,14 +34,14 @@ const Branch = (props: BranchProps) => {
       {
         Object.entries(branches).map(([branch, {checked, subBranches}]) => {
           const folded = subBranches.every(branch => branch.checked === false);
-          
+
           return (
             subBranches.length === 0
             ? <SingleBranch key={branch} text={branch} checked={checked} onClick={() => {handleBranchSelection(branch)}} />
             : <GroupBranch key={branch} text={branch} folded={folded} children={subBranches} onChildClicked={handleBranchSelection} />
           );
         })
-      } 
+      }
       </div>
     </div>
   );

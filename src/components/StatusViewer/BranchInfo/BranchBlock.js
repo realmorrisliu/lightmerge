@@ -1,11 +1,7 @@
 import React from 'react';
 import './BranchBlock.scss';
 
-interface BranchBlockProps {
-  name: string,
-};
-
-const BranchBlock = (props: BranchBlockProps) => (
+const BranchBlock = (props) => (
   <span className="BranchBlock">
     { props.name }
   </span>
