@@ -1,6 +1,6 @@
 import React from 'react';
 import BranchInfo from './BranchInfo';
-import Logs from './Logs';
+import LogWindow from './LogWindow';
 import './StatusViewer.scss';
 
 interface StatusViewerProps {
@@ -11,7 +11,7 @@ const StatusViewer = (props: StatusViewerProps) => {
   return (
     <div className="StatusViewer">
       <BranchInfo selectedBranches={props.selectedBranches} />
-      <Logs />
+      <LogWindow />
     </div>
   );
 };
