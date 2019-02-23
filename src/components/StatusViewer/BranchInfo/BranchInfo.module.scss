@@ -5,6 +5,7 @@
   .Source,
   .Target {
     padding: 10px 20px 0 20px;
+    min-height: 32px;
 
     &::after {
       content: "";
