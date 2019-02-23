@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './LogWindow.scss';
+import styles from './LogWindow.module.scss';
 
 const LogWindow = ({ logs }) => (
-  <div className="LogWindow">
+  <div className={styles.LogWindow}>
     {logs}
   </div>
 );

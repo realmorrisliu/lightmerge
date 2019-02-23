@@ -1,25 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import BranchBlock from './BranchBlock';
-import './BranchInfo.scss';
+import styles from './BranchInfo.module.scss';
 
 const BranchInfo = ({ selectedBranches }) => (
-  <div className="BranchInfo">
-    <div className="Base">
-      <span className="Type">Base branch:</span>
-      <span className="Blocks">
+  <div className={styles.BranchInfo}>
+    <div className={styles.Base}>
+      <span className={styles.Type}>Base branch:</span>
+      <span className={styles.Blocks}>
         <BranchBlock name="master" />
       </span>
     </div>
-    <div className="Source">
-      <span className="Type">Source branch:</span>
-      <span className="Blocks">
+    <div className={styles.Source}>
+      <span className={styles.Type}>Source branch:</span>
+      <span className={styles.Blocks}>
         {selectedBranches.map(branch => <BranchBlock key={branch} name={branch} />)}
       </span>
     </div>
-    <div className="Target">
-      <span className="Type">Target branch:</span>
-      <span className="Blocks">
+    <div className={styles.Target}>
+      <span className={styles.Type}>Target branch:</span>
+      <span className={styles.Blocks}>
         <BranchBlock name="lightmerge" />
       </span>
     </div>

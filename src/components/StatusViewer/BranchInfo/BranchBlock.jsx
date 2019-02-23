@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './BranchBlock.scss';
+import styles from './BranchBlock.module.scss';
 
 const BranchBlock = ({ name }) => (
-  <span className="BranchBlock">
+  <span className={styles.BranchBlock}>
     {name}
   </span>
 );

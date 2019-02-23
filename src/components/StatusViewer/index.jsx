@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import BranchInfo from './BranchInfo';
 import LogWindow from './LogWindow';
-import './StatusViewer.scss';
+import styles from './StatusViewer.module.scss';
 
 const StatusViewer = ({ selectedBranches, logs }) => (
-  <div className="StatusViewer">
+  <div className={styles.StatusViewer}>
     <BranchInfo selectedBranches={selectedBranches} />
     <LogWindow logs={logs} />
   </div>

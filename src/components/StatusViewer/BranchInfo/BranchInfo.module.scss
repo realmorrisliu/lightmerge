@@ -5,9 +5,10 @@
   .Source,
   .Target {
     padding: 10px 20px 0 20px;
+    min-height: 32px;
 
     &::after {
-      content:"";
+      content: "";
       clear: both;
       display: block;
     }
@@ -17,15 +18,19 @@
       line-height: 22px;
     }
 
-    
+    .Blocks {
+
+    }
   }
 
   .Base {
     background: #e8e8e8;
   }
+
   .Source {
     background: #d9d9d9;
   }
+
   .Target {
     background: #bfbfbf;
   }
