@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BranchSelector from './components/BranchSelector';
 import StatusViewer from './components/StatusViewer';
 import UserIcon from './avatar.jpeg';
+import { getBranchList } from './controllers/Branch';
 
 import styles from './App.module.scss';
 
-const branches = ['master', 'lightmerge', 'lym/chatroom', 'lym/group-chat', 'lym/video', 'feature/chatroom', 'feature/messagebox'];
-const originSelectedBranches = ['lym/chatroom', 'lym/group-chat'];
-
 const App = () => {
-  const [selectedBranches, setSelectedBranches] = useState(originSelectedBranches);
+  const [branchList, setBranchList] = useState([]);
+  const [selectedBranches, setSelectedBranches] = useState([]);
+
+  useEffect(() => {
+  });
 
   const handleBranchClick = (branchName) => {
     if (selectedBranches.includes(branchName)) {
@@ -31,13 +33,24 @@ const App = () => {
     console.log(selectedBranches);
   };
 
+  const handleRepoEnter = (e) => {
+    if (e.key === 'Enter') {
+      getBranchList(e.target.value, setBranchList);
+    }
+  };
+
   return (
     <div className={styles.App}>
       <div className={styles.ActionBar}>
         <div className={styles.User}>
           <img alt="user avatar" className={styles.Avatar} src={UserIcon} />
         </div>
-        <input className={styles.RepoPath} type="text" placeholder="Repository Path" />
+        <input
+          className={styles.RepoPath}
+          type="text"
+          placeholder="Repository Path"
+          onKeyPress={handleRepoEnter}
+        />
         <button
           type="button"
           className={styles.Button}
@@ -50,8 +63,8 @@ const App = () => {
       </div>
       <div className={styles.Content}>
         <BranchSelector
-          branchList={branches}
-          alreadySelected={originSelectedBranches}
+          branchList={branchList}
+          alreadySelected={selectedBranches}
           onChange={handleBranchClick}
         />
         <StatusViewer selectedBranches={selectedBranches} logs="" />

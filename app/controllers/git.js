@@ -1,13 +1,42 @@
-// const Git = require('nodegit');
+const Git = require('nodegit');
+const type = require('../utils/type');
 
-// const openRepo = path => Git.Repository.open(path);
+const { Repository, Reference } = Git;
+const openRepo = path => Repository.open(path);
 
-const getGit = async (ctx) => {
-  const { name } = ctx.params;
-  // openRepo(name);
-  ctx.response.body = `<h1>Hello, ${name}!</h1>`;
+const getBranchList = pathToRepo => new Promise((resolve) => {
+  openRepo(pathToRepo)
+    .then(repository => repository.getReferenceNames(Reference.TYPE.LISTALL))
+    .then(referenceList => resolve(
+      referenceList
+        .filter(name => !name.includes('remotes'))
+        .map(name => name.replace('refs/heads/', '')),
+    ))
+    .catch((e) => {
+      resolve(e);
+    })
+    .done();
+});
+
+const handleGetBranchList = async ({ request, response }) => {
+  const { path: pathToRepo } = request.body;
+
+  const list = await getBranchList(pathToRepo);
+
+  if (type.isArray(list)) {
+    response.body = {
+      code: 200,
+      message: 'success',
+      data: list || [],
+    };
+  } else {
+    response.body = {
+      code: 404,
+      message: `Cannot find Repo: ${pathToRepo}`,
+    };
+  }
 };
 
 module.exports = {
-  'GET /branch/:name': getGit,
+  'POST /repo/branch/list': handleGetBranchList,
 };

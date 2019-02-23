@@ -6,7 +6,6 @@ const prefix = '/api';
 const router = Router({ prefix });
 
 function addMapping(mapping) {
-  console.log(mapping);
   Object.keys(mapping).forEach((url) => {
     if (url.startsWith('GET ')) {
       const path = url.substring(4);
