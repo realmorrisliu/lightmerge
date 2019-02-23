@@ -1,11 +1,12 @@
-import { Post } from '../utils/network';
+import { Get } from '../utils/network';
 
 const API = {
-  getBranchList: '/repo/branch/list',
+  getBranchList: '/branch/list',
+  getSelectedBranchList: '/branch/selected',
 };
 
 const getBranchList = (pathToRepo, setBranchList) => {
-  Post(API.getBranchList, {
+  Get(API.getBranchList, {
     path: pathToRepo,
   }).then((result) => {
     if (result.code === 200) {
@@ -16,8 +17,16 @@ const getBranchList = (pathToRepo, setBranchList) => {
   });
 };
 
-const getBranchByName = (name) => {
-  console.log(name);
+const getSelectedBranchList = (pathToRepo, setSelectedBranchList) => {
+  Get(API.getSelectedBranchList, {
+    path: pathToRepo,
+  }).then((result) => {
+    if (result.code === 200) {
+      setSelectedBranchList(result.data);
+    }
+  }).catch((e) => {
+    console.log(e);
+  });
 };
 
-export { getBranchList, getBranchByName };
+export { getBranchList, getSelectedBranchList };

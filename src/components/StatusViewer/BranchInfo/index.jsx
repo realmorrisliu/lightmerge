@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import BranchBlock from './BranchBlock';
 import styles from './BranchInfo.module.scss';
 
-const BranchInfo = ({ selectedBranches }) => (
+const BranchInfo = ({ selectedBranchList }) => (
   <div className={styles.BranchInfo}>
     <div className={styles.Base}>
       <span className={styles.Type}>Base branch:</span>
@@ -14,7 +14,7 @@ const BranchInfo = ({ selectedBranches }) => (
     <div className={styles.Source}>
       <span className={styles.Type}>Source branch:</span>
       <span className={styles.Blocks}>
-        {selectedBranches.map(branch => <BranchBlock key={branch} name={branch} />)}
+        {selectedBranchList.map(branch => <BranchBlock key={branch} name={branch} />)}
       </span>
     </div>
     <div className={styles.Target}>
@@ -27,7 +27,7 @@ const BranchInfo = ({ selectedBranches }) => (
 );
 
 BranchInfo.propTypes = {
-  selectedBranches: PropTypes.arrayOf(PropTypes.string).isRequired,
+  selectedBranchList: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default BranchInfo;

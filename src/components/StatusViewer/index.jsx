@@ -6,7 +6,7 @@ import styles from './StatusViewer.module.scss';
 
 const StatusViewer = ({ selectedBranches, logs }) => (
   <div className={styles.StatusViewer}>
-    <BranchInfo selectedBranches={selectedBranches} />
+    <BranchInfo selectedBranchList={selectedBranches} />
     <LogWindow logs={logs} />
   </div>
 );

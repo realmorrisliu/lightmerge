@@ -2,27 +2,27 @@ import React, { useState, useEffect } from 'react';
 import BranchSelector from './components/BranchSelector';
 import StatusViewer from './components/StatusViewer';
 import UserIcon from './avatar.jpeg';
-import { getBranchList } from './controllers/Branch';
+import { getBranchList, getSelectedBranchList } from './controllers/Branch';
 
 import styles from './App.module.scss';
 
 const App = () => {
   const [branchList, setBranchList] = useState([]);
-  const [selectedBranches, setSelectedBranches] = useState([]);
+  const [selectedBranchList, setSelectedBranchList] = useState([]);
 
   useEffect(() => {
   });
 
   const handleBranchClick = (branchName) => {
-    if (selectedBranches.includes(branchName)) {
-      setSelectedBranches(selectedBranches.filter(branch => branch !== branchName));
+    if (selectedBranchList.includes(branchName)) {
+      setSelectedBranchList(selectedBranchList.filter(branch => branch !== branchName));
     } else {
-      setSelectedBranches(selectedBranches.concat(branchName));
+      setSelectedBranchList(selectedBranchList.concat(branchName));
     }
   };
 
   const isLightmergeAvailable = () => {
-    if (selectedBranches.length === 0) {
+    if (selectedBranchList.length === 0) {
       return false;
     }
 
@@ -30,12 +30,13 @@ const App = () => {
   };
 
   const runLightmerge = () => {
-    console.log(selectedBranches);
+    console.log(selectedBranchList);
   };
 
   const handleRepoEnter = (e) => {
     if (e.key === 'Enter') {
       getBranchList(e.target.value, setBranchList);
+      getSelectedBranchList(e.target.value, setSelectedBranchList);
     }
   };
 
@@ -64,10 +65,10 @@ const App = () => {
       <div className={styles.Content}>
         <BranchSelector
           branchList={branchList}
-          alreadySelected={selectedBranches}
+          alreadySelected={selectedBranchList}
           onChange={handleBranchClick}
         />
-        <StatusViewer selectedBranches={selectedBranches} logs="" />
+        <StatusViewer selectedBranches={selectedBranchList} logs="" />
       </div>
     </div>
   );
