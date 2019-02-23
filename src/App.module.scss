@@ -17,15 +17,13 @@
     }
 
     .User {
-      width: 36px;
-      height: 36px;
       float: left;
 
       .Avatar {
         width: 36px;
         height: 36px;
         border-radius: 50%;
-
+        cursor: pointer;
       }
     }
 
