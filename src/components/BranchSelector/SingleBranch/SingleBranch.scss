@@ -4,14 +4,6 @@
   margin: 5px 0;
   line-height: 28px;
 
-  .Expand {
-    border: 0 none;
-    outline: none;
-    margin: 0;
-    padding: 0;
-    background: transparent;
-  }
-
   .Expand,
   .Checkbox {
     display: inline-block;
@@ -20,6 +12,15 @@
     margin: 0 5px;
     cursor: pointer;
   }
+
+  .Expand {
+    border: 0 none;
+    outline: none;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+  }
+
   .Text {
     font-size: 14px;
   }

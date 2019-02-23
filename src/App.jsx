@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import BranchSelector from './components/BranchSelector';
 import StatusViewer from './components/StatusViewer';
 
-import './App.scss';
+import styles from './App.module.scss';
 
 const branches = ['master', 'lightmerge', 'lym/chatroom', 'lym/group-chat', 'lym/video', 'feature/chatroom', 'feature/messagebox'];
 const originSelectedBranches = ['lym/chatroom', 'feature/chatroom'];
@@ -19,13 +19,14 @@ const App = () => {
   };
 
   return (
-    <div className="App">
-
-      <div className="RepoPath">
-        <input className="Input" type="text" placeholder="Repository Path" />
-        <button type="button" className="Button" disabled>lightmerge</button>
+    <div className={styles.App}>
+      <header className={styles.Header}>user</header>
+      <div className={styles.RepoPath}>
+        <input className={styles.Input} type="text" placeholder="Repository Path" />
+        <button type="button" className={styles.Button} disabled>lightmerge</button>
+        <button type="button" className={styles.Button} disabled>deploy</button>
       </div>
-      <div className="Content">
+      <div className={styles.Content}>
         <BranchSelector
           branchList={branches}
           alreadySelected={originSelectedBranches}
