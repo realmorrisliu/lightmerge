@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import BranchSelector from './components/BranchSelector';
 import StatusViewer from './components/StatusViewer';
+import UserIcon from './avatar.jpeg';
 
 import styles from './App.module.scss';
 
@@ -32,9 +33,11 @@ const App = () => {
 
   return (
     <div className={styles.App}>
-      <header className={styles.Header}>user</header>
-      <div className={styles.RepoPath}>
-        <input className={styles.Input} type="text" placeholder="Repository Path" />
+      <div className={styles.ActionBar}>
+        <div className={styles.User}>
+          <img alt="user avatar" className={styles.Avatar} src={UserIcon} />
+        </div>
+        <input className={styles.RepoPath} type="text" placeholder="Repository Path" />
         <button
           type="button"
           className={styles.Button}

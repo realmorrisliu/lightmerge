@@ -1,16 +1,8 @@
 .App {
+  margin-top: 30px;
   text-align: center;
 
-  .Header {
-    text-align: right;
-    height: 22px;
-    line-height: 22px;
-    padding: 10px 20px;
-    background: #363b44;
-    color: #ffffff;
-  }
-
-  .RepoPath {
+  .ActionBar {
     width: 80%;
     height: 80px;
     min-width: 800px;
@@ -18,15 +10,41 @@
     padding: 22px 0;
     box-sizing: border-box;
 
-    .Input {
-      width: calc(100% - 240px);
+    &:after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+
+    .User {
+      width: 36px;
+      height: 36px;
+      float: left;
+
+      .Avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+
+      }
+    }
+
+    .RepoPath {
+      width: calc(100% - 286px);
       height: 36px;
       outline: none;
       border: 0 none;
       box-shadow: 0 2px 10px #e8e8e8;
       border-radius: 8px;
       padding: 0 12px;
+      margin-left: 10px;
       box-sizing: border-box;
+      float: left;
+
+      &:hover,
+      &:focus {
+        box-shadow: 0 2px 10px #d9d9d9;
+      }
     }
 
     .Button {
@@ -42,6 +60,7 @@
       outline: none;
       box-shadow: 0 2px 10px #bfbfbf;
       font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+      float: left;
 
       &:hover {
         box-shadow: 0 3px 15px #bfbfbf;
