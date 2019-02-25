@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import BranchSelector from './components/BranchSelector';
 import StatusViewer from './components/StatusViewer';
 import UserIcon from './avatar.jpeg';
-import { getBranchList, getSelectedBranchList } from './controllers/Branch';
+import { getBranchList, getSelectedBranchList, updateBranchLightmerge } from './controllers/Branch';
+import Repo from './utils/repo';
 
 import styles from './App.module.scss';
 
@@ -31,12 +32,14 @@ const App = () => {
 
   const runLightmerge = () => {
     console.log(selectedBranchList);
+    updateBranchLightmerge();
   };
 
   const handleRepoEnter = (e) => {
     if (e.key === 'Enter') {
-      getBranchList(e.target.value, setBranchList);
-      getSelectedBranchList(e.target.value, setSelectedBranchList);
+      Repo.setPath(e.target.value);
+      getBranchList(setBranchList);
+      getSelectedBranchList(setSelectedBranchList);
     }
   };
 
