@@ -8,6 +8,8 @@ const controller = require('./controller');
 const Log = require('./utils/logger');
 const { select } = require('./utils/redis');
 
+const REDIS_DB = 1;
+
 const app = new Koa();
 app.use(logger());
 
@@ -19,7 +21,7 @@ app.use(bodyParser());
 
 // log request URL:
 app.use(async (ctx, next) => {
-  await select(1);
+  await select(REDIS_DB);
   await next();
 });
 app.use(controller());
