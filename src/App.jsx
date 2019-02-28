@@ -31,8 +31,7 @@ const App = () => {
   };
 
   const runLightmerge = () => {
-    console.log(selectedBranchList);
-    updateBranchLightmerge();
+    updateBranchLightmerge(selectedBranchList);
   };
 
   const handleRepoEnter = (e) => {

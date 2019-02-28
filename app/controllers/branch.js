@@ -1,4 +1,4 @@
-const { getBranchList } = require('../models/branch');
+const { getBranchList, getBranchSelected, setSelectedBranchList } = require('../models/branch');
 const type = require('../utils/type');
 const Log = require('../utils/logger');
 
@@ -20,8 +20,11 @@ const handleGetBranchList = async ({ query, response }) => {
     };
   }
 };
-const handleGetBranchSelected = async ({ response }) => {
-  const list = ['feature/task-log'];
+const handleGetBranchSelected = async ({ query, response }) => {
+  const { path } = query;
+
+  const list = await getBranchSelected(path);
+  Log.debug(list);
 
   response.body = {
     code: 200,
@@ -30,8 +33,9 @@ const handleGetBranchSelected = async ({ response }) => {
   };
 };
 const handlePostBranchLightmerge = async ({ request, response }) => {
-  const { sourceBranches } = request;
-  Log.debug(sourceBranches);
+  const { path, list } = request.body;
+
+  setSelectedBranchList(path, list);
 
   response.body = {
     code: 200,

@@ -6,6 +6,7 @@ const bodyParser = require('koa-bodyparser');
 
 const controller = require('./controller');
 const Log = require('./utils/logger');
+const { select } = require('./utils/redis');
 
 const app = new Koa();
 app.use(logger());
@@ -18,6 +19,7 @@ app.use(bodyParser());
 
 // log request URL:
 app.use(async (ctx, next) => {
+  await select(1);
   await next();
 });
 app.use(controller());

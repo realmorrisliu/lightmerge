@@ -1,6 +1,7 @@
-const Branch = require('nodegit');
+const Git = require('nodegit');
+const { smembers, srem, sadd } = require('../utils/redis');
 
-const { Repository, Reference } = Branch;
+const { Repository, Reference } = Git;
 const openRepo = path => Repository.open(path);
 
 const getBranchList = pathToRepo => new Promise((resolve) => {
@@ -19,6 +20,21 @@ const getBranchList = pathToRepo => new Promise((resolve) => {
     .done();
 });
 
+const getBranchSelected = async (path) => {
+  const list = await smembers(path);
+  return list || [];
+};
+
+const setSelectedBranchList = async (path, list) => {
+  const oldList = await smembers(path);
+  if (oldList.length !== 0) {
+    await srem(path, oldList);
+  }
+  await sadd(path, list);
+};
+
 module.exports = {
   getBranchList,
+  getBranchSelected,
+  setSelectedBranchList,
 };
