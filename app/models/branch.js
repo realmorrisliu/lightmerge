@@ -47,16 +47,19 @@ const getRecentRepos = async () => {
   return list || [];
 };
 
-const runLightmerge = async (path, list) => {
+const runLightmerge = async (path, list, username, password) => {
   const repo = await Repository.open(path);
   const masterCommit = await repo.getMasterCommit();
 
   Log.debug('Pulling the latest code...');
-  repo.fetchAll({
-    credentials: () => Cred.userpassPlaintextNew(username, password),
-  }).then(() => {
-    repo.mergeBranches('master', 'origin/master');
-  });
+  try {
+    await repo.fetchAll({
+      credentials: () => Cred.userpassPlaintextNew(username, password),
+    });
+    await repo.mergeBranches('master', 'origin/master');
+  } catch (e) {
+    Log.error(e);
+  }
 
   Log.debug('Overwrite lightmerge with master');
   await Branch.create(repo, 'lightmerge', masterCommit, 1);

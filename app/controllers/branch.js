@@ -40,10 +40,15 @@ const handleGetBranchSelected = async ({ query, response }) => {
   };
 };
 const handlePostBranchLightmerge = async ({ request, response }) => {
-  const { path, list } = request.body;
+  const {
+    path,
+    list,
+    username,
+    password,
+  } = request.body;
 
   setSelectedBranchList(path, list);
-  const { conflictBranch, conflictFiles } = await runLightmerge(path, list);
+  const { conflictBranch, conflictFiles } = await runLightmerge(path, list, username, password);
 
   if (type.isUndefined(conflictFiles)) {
     response.body = {

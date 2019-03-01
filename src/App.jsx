@@ -3,6 +3,7 @@ import BranchSelector from './components/BranchSelector';
 import StatusViewer from './components/StatusViewer';
 import UserIcon from './avatar.jpeg';
 import Repo from './utils/repo';
+import Auth from './utils/auth';
 import {
   getBranchList,
   getSelectedBranchList,
@@ -21,6 +22,7 @@ export default class App extends React.Component {
       logs: '',
       pathToRepo: '',
       lightmerged: false,
+      showLogin: true,
       branchList: [],
       recentRepos: [],
       selectedBranchList: [],
@@ -50,6 +52,9 @@ export default class App extends React.Component {
   };
   setSelectedBranchList = (list) => {
     this.setState({ selectedBranchList: list });
+  };
+  setShowLogin = (show) => {
+    this.setState({ showLogin: show });
   };
 
   handleBranchClick = (branchName) => {
@@ -125,14 +130,47 @@ export default class App extends React.Component {
     this.setSelectedBranchList([]);
   };
 
+  handleUsernameInput = (e) => {
+    Auth.setUsername(e.target.value);
+  };
+
+  handlePasswordInput = (e) => {
+    Auth.setPassword(e.target.value);
+  };
+
+  handleLogin = () => {
+    if (Auth.getAuth()) {
+      this.setShowLogin(false);
+    }
+  };
+
+  startLogin = () => {
+    this.setShowLogin(true);
+  };
+
   render() {
-    const { pathToRepo, lightmerged, recentRepos, branchList, selectedBranchList, logs } = this.state;
+    const { pathToRepo, lightmerged, recentRepos, branchList, selectedBranchList, logs, showLogin } = this.state;
 
     return (
       <div className={styles.App}>
+        {
+          showLogin
+            ? (
+              <div className={styles.AuthModal}>
+                <div className={styles.Modal}>
+                  <span className={styles.Title}>Login</span>
+                  <input className={styles.Input} onChange={this.handleUsernameInput} placeholder="Username" />
+                  <input className={styles.Input} onChange={this.handlePasswordInput} placeholder="Password" />
+                  <button className={styles.Button} onClick={this.handleLogin}>OK</button>
+                </div>
+              </div>
+            )
+            : null
+        }
+
         <div className={styles.ActionBar}>
           <div className={styles.User}>
-            <img alt="user avatar" className={styles.Avatar} src={UserIcon} />
+            <img alt="user avatar" className={styles.Avatar} src={UserIcon} onClick={this.startLogin} />
           </div>
           <input
             className={styles.RepoPath}
