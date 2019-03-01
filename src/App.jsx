@@ -79,22 +79,19 @@ export default class App extends React.Component {
     });
   };
 
-  searchRepo = () => {
+  searchRepo = async () => {
     const { pathToRepo } = this.state;
 
     Repo.setPath(pathToRepo);
 
-    getBranchList().then((branchList) => {
-      this.setBranchList(branchList);
-    }).then(() => {
-      getRecentRepos().then((recentRepos) => {
-        this.setRecentRepos(recentRepos);
-      });
-    });
+    const tempSelected = await getSelectedBranchList();
+    const branches = await getBranchList();
+    const recent = await getRecentRepos();
 
-    getSelectedBranchList().then((selectedBranchList) => {
-      this.setSelectedBranchList(selectedBranchList);
-    });
+    const selected = tempSelected.filter(item => branches.includes(item));
+    this.setSelectedBranchList(selected);
+    this.setBranchList(branches);
+    this.setRecentRepos(recent);
   };
 
   handleRepoEnter = (e) => {
