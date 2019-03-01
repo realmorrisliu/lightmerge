@@ -1,36 +1,41 @@
-const Git = require('nodegit');
-const { smembers, srem, sadd } = require('../utils/redis');
+const {
+  Repository,
+  Reference,
+  Branch,
+  Signature,
+  Merge,
+  Index,
+  Cred,
+} = require('nodegit');
 
-const { Repository, Reference } = Git;
-const openRepo = path => Repository.open(path);
+const {
+  smembers,
+  sadd,
+  rpush,
+  lrange,
+  llen,
+  ltrim,
+} = require('../utils/redis');
 
-const getBranchList = pathToRepo => new Promise((resolve) => {
-  openRepo(pathToRepo)
-    .then(repository => repository.getReferenceNames(Reference.TYPE.LISTALL))
-    .then(referenceList => resolve(
-      referenceList
-        .filter(name => !name.includes('remotes'))
-        .map(name => name.replace('refs/heads/', ''))
-        .sort()
-        .reverse(),
-    ))
-    .catch((e) => {
-      resolve(e);
-    })
-    .done();
-});
+const Log = require('../utils/logger');
+
+const getBranchList = async (pathToRepo) => {
+  const repo = await Repository.open(pathToRepo);
+  const refs = await repo.getReferences(Reference.TYPE.LISTALL);
+  const list = await Promise.all(refs.reduce((total, ref) => total.concat(Branch.name(ref)), []));
+
+  return list.sort().reverse();
+};
 
 const getBranchSelected = async (path) => {
-  const list = await smembers(path);
+  const list = await lrange(path, 0, -1);
   return list || [];
 };
 
 const setSelectedBranchList = async (path, list) => {
-  const oldList = await smembers(path);
-  if (oldList.length !== 0) {
-    await srem(path, oldList);
-  }
-  await sadd(path, list);
+  const listLength = await llen(path);
+  await ltrim(path, listLength, 0);
+  await rpush(path, list);
 };
 
 const setRecentRepos = async (path) => {
@@ -42,10 +47,57 @@ const getRecentRepos = async () => {
   return list || [];
 };
 
+const runLightmerge = async (path, list) => {
+  const repo = await Repository.open(path);
+  const masterCommit = await repo.getMasterCommit();
+
+  Log.debug('Pulling the latest code...');
+  repo.fetchAll({
+    credentials: () => Cred.userpassPlaintextNew(username, password),
+  }).then(() => {
+    repo.mergeBranches('master', 'origin/master');
+  });
+
+  Log.debug('Overwrite lightmerge with master');
+  await Branch.create(repo, 'lightmerge', masterCommit, 1);
+
+  const signature = Signature.default(repo);
+  let conflictFiles;
+  let conflictBranch;
+
+  /* eslint-disable no-restricted-syntax */
+  for (const branch of list) {
+    try {
+      /* eslint-disable no-await-in-loop */
+      await repo.mergeBranches(
+        'lightmerge',
+        branch,
+        signature,
+        Merge.PREFERENCE.NO_FASTFORWARD,
+        null,
+      );
+    } catch (index) {
+      conflictBranch = branch;
+
+      conflictFiles = [
+        ...new Set(
+          index
+            .entries()
+            .filter(entry => Index.entryIsConflict(entry))
+            .map(entry => entry.path),
+        ),
+      ];
+    }
+  }
+
+  return { conflictBranch, conflictFiles };
+};
+
 module.exports = {
   getBranchList,
   getBranchSelected,
   setSelectedBranchList,
   setRecentRepos,
   getRecentRepos,
+  runLightmerge,
 };

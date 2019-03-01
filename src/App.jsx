@@ -18,6 +18,7 @@ export default class App extends React.Component {
     super(props);
 
     this.state = {
+      logs: '',
       pathToRepo: '',
       lightmerged: false,
       branchList: [],
@@ -35,7 +36,9 @@ export default class App extends React.Component {
   setPathToRepo = (path) => {
     this.setState({ pathToRepo: path });
   };
-
+  setLogs = (logs) => {
+    this.setState({ logs });
+  };
   setLightmergeStatus = (status) => {
     this.setState({ lightmerged: status });
   };
@@ -71,12 +74,15 @@ export default class App extends React.Component {
     return true;
   };
 
-  runLightmerge = () => {
+  runLightmerge = async () => {
     const { selectedBranchList } = this.state;
 
-    updateBranchLightmerge(selectedBranchList, () => {
-      this.setLightmergeStatus(true);
-    });
+    const data = await updateBranchLightmerge(selectedBranchList);
+    if (data) {
+      this.setLogs(`You have conflicts on file "${data.files}" when merging branch "${data.branch}"`);
+    } else {
+      this.setLogs('lightmerge succeeded');
+    }
   };
 
   searchRepo = async () => {
@@ -103,21 +109,24 @@ export default class App extends React.Component {
 
   handlePathChange = (e) => {
     this.setPathToRepo(e.target.value);
-    this.setLightmergeStatus(false);
-    this.setBranchList([]);
-    this.setSelectedBranchList([]);
+    this.resetState();
   };
 
   handleRecentClicked = (repo) => {
     this.setPathToRepo(repo);
-    this.setLightmergeStatus(false);
-    this.setBranchList([]);
-    this.setSelectedBranchList([]);
+    this.resetState();
     this.refs.pathInput.focus();
   };
 
+  resetState = () => {
+    this.setLogs('');
+    this.setLightmergeStatus(false);
+    this.setBranchList([]);
+    this.setSelectedBranchList([]);
+  };
+
   render() {
-    const { pathToRepo, lightmerged, recentRepos, branchList, selectedBranchList } = this.state;
+    const { pathToRepo, lightmerged, recentRepos, branchList, selectedBranchList, logs } = this.state;
 
     return (
       <div className={styles.App}>
@@ -168,7 +177,7 @@ export default class App extends React.Component {
             alreadySelected={selectedBranchList}
             onChange={this.handleBranchClick}
           />
-          <StatusViewer selectedBranches={selectedBranchList} logs="" />
+          <StatusViewer selectedBranches={selectedBranchList} logs={logs} />
         </div>
       </div>
     );

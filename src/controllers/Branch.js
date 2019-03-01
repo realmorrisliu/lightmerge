@@ -28,16 +28,16 @@ const getSelectedBranchList = async () => new Promise((resolve) => {
   });
 });
 
-const updateBranchLightmerge = async (selectedBranchList, cb) => {
+const updateBranchLightmerge = async selectedBranchList => new Promise((resolve) => {
   Post(API.updateBranchLightmerge, {
     path: Repo.getPath(),
     list: selectedBranchList,
   }).then((result) => {
     if (result.code === 200) {
-      if (cb) cb();
+      resolve(result.data);
     }
   });
-};
+});
 
 const getRecentRepos = async () => new Promise((resolve) => {
   Get(API.getRecentRepos).then((result) => {

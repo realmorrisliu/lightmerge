@@ -4,6 +4,7 @@ const {
   setSelectedBranchList,
   setRecentRepos,
   getRecentRepos,
+  runLightmerge,
 } = require('../models/branch');
 const type = require('../utils/type');
 const Log = require('../utils/logger');
@@ -31,7 +32,6 @@ const handleGetBranchSelected = async ({ query, response }) => {
   const { path } = query;
 
   const list = await getBranchSelected(path);
-  Log.debug(list);
 
   response.body = {
     code: 200,
@@ -43,16 +43,27 @@ const handlePostBranchLightmerge = async ({ request, response }) => {
   const { path, list } = request.body;
 
   setSelectedBranchList(path, list);
+  const { conflictBranch, conflictFiles } = await runLightmerge(path, list);
 
-  response.body = {
-    code: 200,
-    message: 'success',
-  };
+  if (type.isUndefined(conflictFiles)) {
+    response.body = {
+      code: 200,
+      message: 'success',
+    };
+  } else {
+    response.body = {
+      code: 200,
+      message: 'success',
+      data: {
+        branch: conflictBranch,
+        files: conflictFiles,
+      },
+    };
+  }
 };
 
 const handleGetRecentRepos = async ({ response }) => {
   const list = await getRecentRepos();
-  Log.debug(list);
 
   response.body = {
     code: 200,
