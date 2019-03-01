@@ -24,7 +24,7 @@ const getBranchList = async (pathToRepo) => {
   const refs = await repo.getReferences(Reference.TYPE.LISTALL);
   const list = await Promise.all(refs.reduce((total, ref) => total.concat(Branch.name(ref)), []));
 
-  return list.sort().reverse();
+  return list.filter(branch => !branch.includes('origin')).sort().reverse();
 };
 
 const getBranchSelected = async (path) => {
