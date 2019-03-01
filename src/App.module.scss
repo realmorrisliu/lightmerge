@@ -4,10 +4,9 @@
 
   .ActionBar {
     width: 80%;
-    height: 80px;
+    height: 40px;
     min-width: 800px;
-    margin: 0 auto;
-    padding: 22px 0;
+    margin: 10px auto;
     box-sizing: border-box;
 
     &:after {
@@ -74,6 +73,24 @@
         cursor: not-allowed;
         color: #bfbfbf;
       }
+    }
+  }
+
+  .RecentRepos {
+    width: 80%;
+    margin: 0 auto;
+    text-align: left;
+
+    .Path {
+      border: 0 none;
+      outline: none;
+      background: #e8e8e8;
+      margin-right: 10px;
+      margin-bottom: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 4px 8px;
     }
   }
 

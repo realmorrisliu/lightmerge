@@ -5,41 +5,51 @@ const API = {
   getBranchList: '/branch/list',
   getSelectedBranchList: '/branch/selected',
   updateBranchLightmerge: '/branch/lightmerge',
+  getRecentRepos: '/repo/list',
 };
 
-const getBranchList = (setBranchList) => {
+const getBranchList = async () => new Promise((resolve) => {
   Get(API.getBranchList, {
     path: Repo.getPath(),
   }).then((result) => {
     if (result.code === 200) {
-      setBranchList(result.data);
+      resolve(result.data);
     }
-  }).catch((e) => {
-    console.log(e);
   });
-};
+});
 
-const getSelectedBranchList = (setSelectedBranchList) => {
+const getSelectedBranchList = async () => new Promise((resolve) => {
   Get(API.getSelectedBranchList, {
     path: Repo.getPath(),
   }).then((result) => {
     if (result.code === 200) {
-      setSelectedBranchList(result.data);
+      resolve(result.data);
     }
-  }).catch((e) => {
-    console.log(e);
   });
-};
+});
 
-const updateBranchLightmerge = (selectedBranchList) => {
+const updateBranchLightmerge = async (selectedBranchList, cb) => {
   Post(API.updateBranchLightmerge, {
     path: Repo.getPath(),
     list: selectedBranchList,
   }).then((result) => {
     if (result.code === 200) {
-      console.log(result.message);
+      if (cb) cb();
     }
   });
 };
 
-export { getBranchList, getSelectedBranchList, updateBranchLightmerge };
+const getRecentRepos = async () => new Promise((resolve) => {
+  Get(API.getRecentRepos).then((result) => {
+    if (result.code === 200) {
+      resolve(result.data);
+    }
+  });
+});
+
+export {
+  getBranchList,
+  getSelectedBranchList,
+  updateBranchLightmerge,
+  getRecentRepos,
+};

@@ -33,8 +33,19 @@ const setSelectedBranchList = async (path, list) => {
   await sadd(path, list);
 };
 
+const setRecentRepos = async (path) => {
+  await sadd('recentRepos', path);
+};
+
+const getRecentRepos = async () => {
+  const list = await smembers('recentRepos');
+  return list || [];
+};
+
 module.exports = {
   getBranchList,
   getBranchSelected,
   setSelectedBranchList,
+  setRecentRepos,
+  getRecentRepos,
 };

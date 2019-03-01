@@ -1,28 +1,69 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import BranchSelector from './components/BranchSelector';
 import StatusViewer from './components/StatusViewer';
 import UserIcon from './avatar.jpeg';
-import { getBranchList, getSelectedBranchList, updateBranchLightmerge } from './controllers/Branch';
 import Repo from './utils/repo';
+import {
+  getBranchList,
+  getSelectedBranchList,
+  updateBranchLightmerge,
+  getRecentRepos,
+} from './controllers/Branch';
 
 import styles from './App.module.scss';
 
-const App = () => {
-  const [branchList, setBranchList] = useState([]);
-  const [selectedBranchList, setSelectedBranchList] = useState([]);
+export default class App extends React.Component {
 
-  useEffect(() => {
-  });
+  constructor(props) {
+    super(props);
 
-  const handleBranchClick = (branchName) => {
+    this.state = {
+      pathToRepo: '',
+      lightmerged: false,
+      branchList: [],
+      recentRepos: [],
+      selectedBranchList: [],
+    };
+  };
+
+  componentDidMount() {
+    getRecentRepos().then((recentRepos) => {
+      this.setRecentRepos(recentRepos);
+    });
+  }
+
+  setPathToRepo = (path) => {
+    this.setState({ pathToRepo: path });
+  };
+
+  setLightmergeStatus = (status) => {
+    this.setState({ lightmerged: status });
+  };
+  setBranchList = (list) => {
+    this.setState({ branchList: list });
+  };
+  setRecentRepos = (list) => {
+    this.setState({ recentRepos: list });
+  };
+  setSelectedBranchList = (list) => {
+    this.setState({ selectedBranchList: list });
+  };
+
+  handleBranchClick = (branchName) => {
+    const { selectedBranchList } = this.state;
+
+    this.setLightmergeStatus(false);
+
     if (selectedBranchList.includes(branchName)) {
-      setSelectedBranchList(selectedBranchList.filter(branch => branch !== branchName));
+      this.setSelectedBranchList(selectedBranchList.filter(branch => branch !== branchName));
     } else {
-      setSelectedBranchList(selectedBranchList.concat(branchName));
+      this.setSelectedBranchList(selectedBranchList.concat(branchName));
     }
   };
 
-  const isLightmergeAvailable = () => {
+  isLightmergeAvailable = () => {
+    const { selectedBranchList } = this.state;
+
     if (selectedBranchList.length === 0) {
       return false;
     }
@@ -30,50 +71,109 @@ const App = () => {
     return true;
   };
 
-  const runLightmerge = () => {
-    updateBranchLightmerge(selectedBranchList);
+  runLightmerge = () => {
+    const { selectedBranchList } = this.state;
+
+    updateBranchLightmerge(selectedBranchList, () => {
+      this.setLightmergeStatus(true);
+    });
   };
 
-  const handleRepoEnter = (e) => {
+  searchRepo = () => {
+    const { pathToRepo } = this.state;
+
+    Repo.setPath(pathToRepo);
+
+    getBranchList().then((branchList) => {
+      this.setBranchList(branchList);
+    }).then(() => {
+      getRecentRepos().then((recentRepos) => {
+        this.setRecentRepos(recentRepos);
+      });
+    });
+
+    getSelectedBranchList().then((selectedBranchList) => {
+      this.setSelectedBranchList(selectedBranchList);
+    });
+  };
+
+  handleRepoEnter = (e) => {
     if (e.key === 'Enter') {
-      Repo.setPath(e.target.value);
-      getBranchList(setBranchList);
-      getSelectedBranchList(setSelectedBranchList);
+      this.setLightmergeStatus(false);
+      this.searchRepo();
     }
   };
 
-  return (
-    <div className={styles.App}>
-      <div className={styles.ActionBar}>
-        <div className={styles.User}>
-          <img alt="user avatar" className={styles.Avatar} src={UserIcon} />
-        </div>
-        <input
-          className={styles.RepoPath}
-          type="text"
-          placeholder="Repository Path"
-          onKeyPress={handleRepoEnter}
-        />
-        <button
-          type="button"
-          className={styles.Button}
-          disabled={!isLightmergeAvailable()}
-          onClick={runLightmerge}
-        >
-          lightmerge
-        </button>
-        <button type="button" className={styles.Button} disabled>deploy</button>
-      </div>
-      <div className={styles.Content}>
-        <BranchSelector
-          branchList={branchList}
-          alreadySelected={selectedBranchList}
-          onChange={handleBranchClick}
-        />
-        <StatusViewer selectedBranches={selectedBranchList} logs="" />
-      </div>
-    </div>
-  );
-};
+  handlePathChange = (e) => {
+    this.setPathToRepo(e.target.value);
+    this.setLightmergeStatus(false);
+    this.setBranchList([]);
+    this.setSelectedBranchList([]);
+  };
 
-export default App;
+  handleRecentClicked = (repo) => {
+    this.setPathToRepo(repo);
+    this.setLightmergeStatus(false);
+    this.setBranchList([]);
+    this.setSelectedBranchList([]);
+    this.refs.pathInput.focus();
+  };
+
+  render() {
+    const { pathToRepo, lightmerged, recentRepos, branchList, selectedBranchList } = this.state;
+
+    return (
+      <div className={styles.App}>
+        <div className={styles.ActionBar}>
+          <div className={styles.User}>
+            <img alt="user avatar" className={styles.Avatar} src={UserIcon} />
+          </div>
+          <input
+            className={styles.RepoPath}
+            type="text"
+            ref="pathInput"
+            placeholder="Repository Path"
+            value={pathToRepo}
+            onChange={this.handlePathChange}
+            onKeyPress={this.handleRepoEnter}
+          />
+
+          <button
+            type="button"
+            className={styles.Button}
+            disabled={!this.isLightmergeAvailable()}
+            onClick={this.runLightmerge}
+          >
+            lightmerge
+          </button>
+          <button type="button" className={styles.Button} disabled={!lightmerged}>deploy</button>
+        </div>
+
+        <div className={styles.RecentRepos}>
+          {
+            recentRepos.map(repo => (
+              <code>
+                <button
+                  type="button"
+                  className={styles.Path}
+                  onClick={() => this.handleRecentClicked(repo)}
+                >
+                  {repo}
+                </button>
+              </code>
+            ))
+          }
+        </div>
+
+        <div className={styles.Content}>
+          <BranchSelector
+            branchList={branchList}
+            alreadySelected={selectedBranchList}
+            onChange={this.handleBranchClick}
+          />
+          <StatusViewer selectedBranches={selectedBranchList} logs="" />
+        </div>
+      </div>
+    );
+  }
+}

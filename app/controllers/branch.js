@@ -1,4 +1,10 @@
-const { getBranchList, getBranchSelected, setSelectedBranchList } = require('../models/branch');
+const {
+  getBranchList,
+  getBranchSelected,
+  setSelectedBranchList,
+  setRecentRepos,
+  getRecentRepos,
+} = require('../models/branch');
 const type = require('../utils/type');
 const Log = require('../utils/logger');
 
@@ -6,6 +12,7 @@ const handleGetBranchList = async ({ query, response }) => {
   const { path: pathToRepo } = query;
 
   const list = await getBranchList(pathToRepo);
+  setRecentRepos(pathToRepo);
 
   if (type.isArray(list)) {
     response.body = {
@@ -29,7 +36,7 @@ const handleGetBranchSelected = async ({ query, response }) => {
   response.body = {
     code: 200,
     message: 'success',
-    data: list || [],
+    data: list,
   };
 };
 const handlePostBranchLightmerge = async ({ request, response }) => {
@@ -43,7 +50,19 @@ const handlePostBranchLightmerge = async ({ request, response }) => {
   };
 };
 
+const handleGetRecentRepos = async ({ response }) => {
+  const list = await getRecentRepos();
+  Log.debug(list);
+
+  response.body = {
+    code: 200,
+    message: 'success',
+    data: list,
+  };
+};
+
 module.exports = {
+  'GET /repo/list': handleGetRecentRepos,
   'GET /branch/list': handleGetBranchList,
   'GET /branch/selected': handleGetBranchSelected,
   'POST /branch/lightmerge': handlePostBranchLightmerge,
