@@ -85,6 +85,7 @@ export default class App extends React.Component {
     const { selectedBranchList } = this.state;
 
     const error = await updateBranchLightmerge(selectedBranchList);
+    console.log(error);
     if (error) {
       this.setLogs(error);
     } else {
