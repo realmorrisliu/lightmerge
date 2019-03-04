@@ -45,18 +45,27 @@ const handlePostBranchLightmerge = async ({ request, response }) => {
   const { path, list } = request.body;
 
   setSelectedBranchList(path, list);
-  const { conflictBranch, conflictFiles } = await runLightmerge(path, list);
 
-  if (type.isUndefined(conflictFiles)) {
-    response.body = {
-      code: 200,
-      message: 'success',
-    };
-  } else {
+  try {
+    const { conflictBranch, conflictFiles } = await runLightmerge(path, list);
+
+    if (type.isUndefined(conflictFiles)) {
+      response.body = {
+        code: 200,
+        message: 'success',
+      };
+    } else {
+      response.body = {
+        code: 200,
+        message: 'failed',
+        error: `You have conflicts on file "${conflictFiles}" when merging branch "${conflictBranch}"`,
+      };
+    }
+  } catch (error) {
     response.body = {
       code: 200,
       message: 'failed',
-      error: `You have conflicts on file "${conflictFiles}" when merging branch "${conflictBranch}"`,
+      error,
     };
   }
 };

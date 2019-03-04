@@ -54,8 +54,12 @@ const runLightmerge = async (path, list) => {
   const masterCommit = await repo.getMasterCommit();
 
   const canWrite = await hsetnx(`${path}/lock`, 'lock', 1);
+  Log.debug(canWrite);
+  const CannotLightmerge = {
+    message: 'Other user is lightmerging, please wait!',
+  };
   if (canWrite === 0) {
-    return undefined;
+    throw CannotLightmerge;
   }
 
   Log.debug('Overwrite lightmerge with master');
