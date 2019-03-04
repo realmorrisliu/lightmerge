@@ -17,7 +17,7 @@ export default class Repo {
   }
 
   static getBase() {
-    return this.instance ? this.instance.base : 'master';
+    return this.instance ? this.instance.base : undefined;
   }
 
   static setBase(base) {

@@ -112,7 +112,7 @@ export default class App extends React.Component {
     this.setSelectedBranchList(selected);
     this.setBranchList(branches);
     this.setRecentRepos(recent);
-    Repo.setBase(branches[0] || 'master');
+    Repo.setBase(Repo.getBase() || branches[0] || 'master');
   };
 
   handleRepoEnter = (e) => {
