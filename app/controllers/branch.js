@@ -6,6 +6,7 @@ const {
   getRecentRepos,
   runLightmerge,
   pullLatestCode,
+  depoly,
 } = require('../models/branch');
 const type = require('../utils/type');
 
@@ -54,11 +55,8 @@ const handlePostBranchLightmerge = async ({ request, response }) => {
   } else {
     response.body = {
       code: 200,
-      message: 'success',
-      data: {
-        branch: conflictBranch,
-        files: conflictFiles,
-      },
+      message: 'failed',
+      error: `You have conflicts on file "${conflictFiles}" when merging branch "${conflictBranch}"`,
     };
   }
 };
@@ -81,7 +79,27 @@ const handlePullLatestCode = async ({ request, response }) => {
   if (error) {
     response.body = {
       code: 200,
-      message: error,
+      message: 'failed',
+      error,
+    };
+  }
+
+  response.body = {
+    code: 200,
+    message: 'success',
+  };
+};
+
+const handleDeploy = async ({ request, response }) => {
+  const { path } = request.body;
+
+  const error = await depoly(path);
+
+  if (error) {
+    response.body = {
+      code: 200,
+      message: 'failed',
+      error,
     };
   }
 
@@ -97,4 +115,5 @@ module.exports = {
   'GET /branch/list': handleGetBranchList,
   'GET /branch/selected': handleGetBranchSelected,
   'POST /branch/lightmerge': handlePostBranchLightmerge,
+  'POST /deploy': handleDeploy,
 };

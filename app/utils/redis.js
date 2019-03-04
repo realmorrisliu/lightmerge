@@ -12,6 +12,8 @@ const asyncRedisFunction = [
   'lrange',
   'llen',
   'ltrim',
+  'hsetnx',
+  'hdel',
 ]
   .map(item => ({ [item]: promisify(client[item]).bind(client) }))
   .reduce((current, target) => Object.assign(target, current));

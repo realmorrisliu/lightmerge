@@ -15,6 +15,8 @@ const {
   lrange,
   llen,
   ltrim,
+  hsetnx,
+  hdel,
 } = require('../utils/redis');
 
 const Log = require('../utils/logger');
@@ -50,6 +52,9 @@ const getRecentRepos = async () => {
 const runLightmerge = async (path, list) => {
   const repo = await Repository.open(path);
   const masterCommit = await repo.getMasterCommit();
+
+  const isLocked = await hsetnx(`${path}/lock`, 'lock', 1);
+  Log.debug(isLocked);
 
   Log.debug('Overwrite lightmerge with master');
   await repo.createBranch('lightmerge', masterCommit, true);
@@ -112,6 +117,10 @@ const pullLatestCode = async (path, username, password) => {
   return undefined;
 };
 
+const depoly = async (path) => {
+
+};
+
 module.exports = {
   getBranchList,
   getBranchSelected,
@@ -120,4 +129,5 @@ module.exports = {
   getRecentRepos,
   runLightmerge,
   pullLatestCode,
+  depoly,
 };

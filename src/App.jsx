@@ -10,6 +10,7 @@ import {
   updateBranchLightmerge,
   getRecentRepos,
   pullLatestCode,
+  deploy,
 } from './controllers/Branch';
 
 import styles from './App.module.scss';
@@ -83,13 +84,18 @@ export default class App extends React.Component {
   runLightmerge = async () => {
     const { selectedBranchList } = this.state;
 
-    const data = await updateBranchLightmerge(selectedBranchList);
-    if (data) {
-      this.setLogs(`You have conflicts on file "${data.files}" when merging branch "${data.branch}"`);
+    const error = await updateBranchLightmerge(selectedBranchList);
+    if (error) {
+      this.setLogs(error);
     } else {
       this.setLogs('lightmerge succeeded');
       this.setLightmergeStatus(true);
     }
+  };
+
+  deployLightmerge = async () => {
+    const result = await deploy();
+    this.setLogs(result);
   };
 
   searchRepo = async () => {
@@ -97,7 +103,10 @@ export default class App extends React.Component {
 
     Repo.setPath(pathToRepo);
 
-    await pullLatestCode();
+    const error = await pullLatestCode();
+    if (error) {
+      this.setLogs(error);
+    }
 
     const tempSelected = await getSelectedBranchList();
     const branches = await getBranchList();
@@ -204,7 +213,9 @@ export default class App extends React.Component {
           >
             lightmerge
           </button>
-          <button type="button" className={styles.Button} disabled={!lightmerged}>deploy</button>
+          <button type="button" className={styles.Button} disabled={!lightmerged}
+                  onClick={this.deployLightmerge}>deploy
+          </button>
         </div>
 
         <div className={styles.RecentRepos}>
