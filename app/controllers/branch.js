@@ -61,11 +61,11 @@ const handlePostBranchLightmerge = async ({ request, response }) => {
         error: `You have conflicts on file "${conflictFiles}" when merging branch "${conflictBranch}"`,
       };
     }
-  } catch (error) {
+  } catch (e) {
     response.body = {
       code: 200,
       message: 'failed',
-      error,
+      error: e.message,
     };
   }
 };
