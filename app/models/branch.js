@@ -136,7 +136,7 @@ const depoly = async (path) => {
     console.log(`stderr: ${stderr}`);
   });
 
-  exec(`./lightmerge.sh ${path}`, (error, stdout, stderr) => {
+  exec(`.app/lightmerge.sh ${path}`, (error, stdout, stderr) => {
     if (error) {
       console.error(`执行出错: ${error}`);
       return;
