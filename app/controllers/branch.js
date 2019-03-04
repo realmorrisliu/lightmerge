@@ -8,7 +8,6 @@ const {
   pullLatestCode,
 } = require('../models/branch');
 const type = require('../utils/type');
-const Log = require('../utils/logger');
 
 const handleGetBranchList = async ({ query, response }) => {
   const { path: pathToRepo } = query;

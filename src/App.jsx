@@ -88,6 +88,7 @@ export default class App extends React.Component {
       this.setLogs(`You have conflicts on file "${data.files}" when merging branch "${data.branch}"`);
     } else {
       this.setLogs('lightmerge succeeded');
+      this.setLightmergeStatus(true);
     }
   };
 

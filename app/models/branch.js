@@ -23,9 +23,8 @@ const getBranchList = async (pathToRepo) => {
   const repo = await Repository.open(pathToRepo);
   const refs = await repo.getReferences(Reference.TYPE.LISTALL);
   const list = await Promise.all(refs.reduce((total, ref) => total.concat(Branch.name(ref)), []));
-  Log.debug(list);
 
-  return list;
+  return list || [];
 };
 
 const getBranchSelected = async (path) => {
@@ -54,7 +53,6 @@ const runLightmerge = async (path, list) => {
 
   Log.debug('Overwrite lightmerge with master');
   await repo.createBranch('lightmerge', masterCommit, true);
-  // await Branch.create(repo, 'lightmerge', masterCommit, 1);
 
   const signature = Signature.default(repo);
   let conflictFiles;
@@ -92,7 +90,6 @@ const pullLatestCode = async (path, username, password) => {
   const repo = await Repository.open(path);
 
   Log.debug('Pulling the latest code...');
-  Log.debug(`username: ${username}, password: ${password}`);
   try {
     await repo.fetchAll({
       callbacks: {
