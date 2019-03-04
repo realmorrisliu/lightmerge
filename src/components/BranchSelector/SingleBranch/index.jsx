@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './SingleBranch.scss';
 
-const reservedBranches = ['master', 'lightmerge'];
+const reservedBranches = ['lightmerge'];
 
 const SingleBranch = (
   {
