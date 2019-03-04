@@ -52,6 +52,7 @@ const runLightmerge = async (path, list, username, password) => {
   const masterCommit = await repo.getMasterCommit();
 
   Log.debug('Pulling the latest code...');
+  Log.debug(`username: ${username}, password: ${password}`);
   try {
     await repo.fetchAll({
       credentials: () => Cred.userpassPlaintextNew(username, password),

@@ -159,8 +159,18 @@ export default class App extends React.Component {
               <div className={styles.AuthModal}>
                 <div className={styles.Modal}>
                   <span className={styles.Title}>Login</span>
-                  <input className={styles.Input} onChange={this.handleUsernameInput} placeholder="Username" />
-                  <input className={styles.Input} onChange={this.handlePasswordInput} placeholder="Password" />
+                  <input
+                    className={styles.Input}
+                    type="text"
+                    onChange={this.handleUsernameInput}
+                    placeholder="Username"
+                  />
+                  <input
+                    className={styles.Input}
+                    type="password"
+                    onChange={this.handlePasswordInput}
+                    placeholder="Password"
+                  />
                   <button className={styles.Button} onClick={this.handleLogin}>OK</button>
                 </div>
               </div>
