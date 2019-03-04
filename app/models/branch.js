@@ -53,8 +53,10 @@ const runLightmerge = async (path, list) => {
   const repo = await Repository.open(path);
   const masterCommit = await repo.getMasterCommit();
 
-  const isLocked = await hsetnx(`${path}/lock`, 'lock', 1);
-  Log.debug(isLocked);
+  const canWrite = await hsetnx(`${path}/lock`, 'lock', 1);
+  if (canWrite === 0) {
+    return undefined;
+  }
 
   Log.debug('Overwrite lightmerge with master');
   await repo.createBranch('lightmerge', masterCommit, true);
@@ -87,6 +89,8 @@ const runLightmerge = async (path, list) => {
       ];
     }
   }
+
+  await hdel(`${path}/lock`, 'lock');
 
   return { conflictBranch, conflictFiles };
 };
