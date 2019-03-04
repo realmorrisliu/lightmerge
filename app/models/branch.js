@@ -1,4 +1,4 @@
-const execFile = require('child_process').execFile;
+const { exec } = require('child_process');
 const {
   Repository,
   Reference,
@@ -127,9 +127,13 @@ const pullLatestCode = async (path, username, password) => {
 };
 
 const depoly = async (path) => {
-  execFile('lightmerge.sh', [path], (err, stdout, stderr) => {
-    console.log(stdout);
-    console.log(stderr);
+  exec(`lightmerge.sh ${path}`, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`执行出错: ${error}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.log(`stderr: ${stderr}`);
   });
 };
 
