@@ -74,11 +74,7 @@ export default class App extends React.Component {
   isLightmergeAvailable = () => {
     const { selectedBranchList } = this.state;
 
-    if (selectedBranchList.length === 0) {
-      return false;
-    }
-
-    return true;
+    return selectedBranchList.length !== 0;
   };
 
   runLightmerge = async () => {
@@ -116,6 +112,7 @@ export default class App extends React.Component {
     this.setSelectedBranchList(selected);
     this.setBranchList(branches);
     this.setRecentRepos(recent);
+    Repo.setBase(branches[0] || 'master');
   };
 
   handleRepoEnter = (e) => {
@@ -240,7 +237,7 @@ export default class App extends React.Component {
             alreadySelected={selectedBranchList}
             onChange={this.handleBranchClick}
           />
-          <StatusViewer selectedBranches={selectedBranchList} logs={logs} />
+          <StatusViewer selectedBranches={selectedBranchList} logs={logs} branchList={branchList} />
         </div>
       </div>
     );

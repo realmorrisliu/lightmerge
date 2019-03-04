@@ -35,6 +35,7 @@ const updateBranchLightmerge = async selectedBranchList => new Promise((resolve)
   Post(API.updateBranchLightmerge, {
     path: Repo.getPath(),
     list: selectedBranchList,
+    base: Repo.getBase(),
   }).then((result) => {
     if (result.code === 200) {
       resolve(result.error);

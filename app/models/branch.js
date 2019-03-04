@@ -50,9 +50,9 @@ const getRecentRepos = async () => {
   return list || [];
 };
 
-const runLightmerge = async (path, list) => {
+const runLightmerge = async (path, list, baseBranch) => {
   const repo = await Repository.open(path);
-  const masterCommit = await repo.getMasterCommit();
+  const baseCommit = await repo.getBranchCommit(baseBranch);
 
   const canWrite = await hsetnx(`${path}/lock`, 'lock', 1);
   Log.debug(canWrite);
@@ -63,8 +63,8 @@ const runLightmerge = async (path, list) => {
     throw CannotLightmerge;
   }
 
-  Log.debug('Overwrite lightmerge with master');
-  await repo.createBranch('lightmerge', masterCommit, true);
+  Log.debug(`Overwrite lightmerge with ${baseBranch}`);
+  await repo.createBranch('lightmerge', baseCommit, true);
 
   const signature = Signature.default(repo);
   let conflictFiles;

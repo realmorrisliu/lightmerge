@@ -1,6 +1,7 @@
 export default class Repo {
-  constructor(path) {
+  constructor(path, base) {
     this.path = path;
+    this.base = base;
   }
 
   static getPath() {
@@ -13,5 +14,17 @@ export default class Repo {
     }
 
     this.instance.path = path;
+  }
+
+  static getBase() {
+    return this.instance ? this.instance.base : 'master';
+  }
+
+  static setBase(base) {
+    if (!this.instance) {
+      this.instance = new Repo('', base);
+    }
+
+    this.instance.base = base;
   }
 }
