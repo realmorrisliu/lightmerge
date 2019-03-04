@@ -9,6 +9,7 @@ import {
   getSelectedBranchList,
   updateBranchLightmerge,
   getRecentRepos,
+  pullLatestCode,
 } from './controllers/Branch';
 
 import styles from './App.module.scss';
@@ -94,6 +95,8 @@ export default class App extends React.Component {
     const { pathToRepo } = this.state;
 
     Repo.setPath(pathToRepo);
+
+    await pullLatestCode();
 
     const tempSelected = await getSelectedBranchList();
     const branches = await getBranchList();

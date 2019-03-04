@@ -23,8 +23,9 @@ const getBranchList = async (pathToRepo) => {
   const repo = await Repository.open(pathToRepo);
   const refs = await repo.getReferences(Reference.TYPE.LISTALL);
   const list = await Promise.all(refs.reduce((total, ref) => total.concat(Branch.name(ref)), []));
+  Log.debug(list);
 
-  return list.filter(branch => !branch.includes('origin')).sort().reverse();
+  return list;
 };
 
 const getBranchSelected = async (path) => {
@@ -47,23 +48,13 @@ const getRecentRepos = async () => {
   return list || [];
 };
 
-const runLightmerge = async (path, list, username, password) => {
+const runLightmerge = async (path, list) => {
   const repo = await Repository.open(path);
   const masterCommit = await repo.getMasterCommit();
 
-  Log.debug('Pulling the latest code...');
-  Log.debug(`username: ${username}, password: ${password}`);
-  try {
-    await repo.fetchAll({
-      credentials: () => Cred.userpassPlaintextNew(username, password),
-    });
-    await repo.mergeBranches('master', 'origin/master');
-  } catch (e) {
-    Log.error(e);
-  }
-
   Log.debug('Overwrite lightmerge with master');
-  await Branch.create(repo, 'lightmerge', masterCommit, 1);
+  await repo.createBranch('lightmerge', masterCommit, true);
+  // await Branch.create(repo, 'lightmerge', masterCommit, 1);
 
   const signature = Signature.default(repo);
   let conflictFiles;
@@ -97,6 +88,33 @@ const runLightmerge = async (path, list, username, password) => {
   return { conflictBranch, conflictFiles };
 };
 
+const pullLatestCode = async (path, username, password) => {
+  const repo = await Repository.open(path);
+
+  Log.debug('Pulling the latest code...');
+  Log.debug(`username: ${username}, password: ${password}`);
+  try {
+    await repo.fetchAll({
+      callbacks: {
+        credentials: () => Cred.userpassPlaintextNew(username, password),
+      },
+    });
+  } catch (e) {
+    Log.error(e);
+    return e;
+  }
+
+  const list = await getBranchList(path);
+  const remoteList = list.filter(branch => branch.includes('origin')).filter(branch => !branch.includes('master'));
+  remoteList.forEach(async (remoteBranch) => {
+    const localBranch = remoteBranch.slice(remoteBranch.indexOf('/') + 1);
+    const remoteBranchCommit = await repo.getBranchCommit(remoteBranch);
+    await repo.createBranch(localBranch, remoteBranchCommit, true);
+  });
+
+  return undefined;
+};
+
 module.exports = {
   getBranchList,
   getBranchSelected,
@@ -104,4 +122,5 @@ module.exports = {
   setRecentRepos,
   getRecentRepos,
   runLightmerge,
+  pullLatestCode,
 };

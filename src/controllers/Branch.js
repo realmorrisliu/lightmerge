@@ -7,6 +7,7 @@ const API = {
   getSelectedBranchList: '/branch/selected',
   updateBranchLightmerge: '/branch/lightmerge',
   getRecentRepos: '/repo/list',
+  pullLatestCode: '/repo/pull',
 };
 
 const getBranchList = async () => new Promise((resolve) => {
@@ -33,7 +34,6 @@ const updateBranchLightmerge = async selectedBranchList => new Promise((resolve)
   Post(API.updateBranchLightmerge, {
     path: Repo.getPath(),
     list: selectedBranchList,
-    ...Auth.getAuth(),
   }).then((result) => {
     if (result.code === 200) {
       resolve(result.data);
@@ -49,9 +49,21 @@ const getRecentRepos = async () => new Promise((resolve) => {
   });
 });
 
+const pullLatestCode = async () => new Promise((resolve) => {
+  Post(API.pullLatestCode, {
+    path: Repo.getPath(),
+    ...Auth.getAuth(),
+  }).then((result) => {
+    if (result.code === 200) {
+      resolve(result.message);
+    }
+  });
+});
+
 export {
   getBranchList,
   getSelectedBranchList,
   updateBranchLightmerge,
   getRecentRepos,
+  pullLatestCode,
 };

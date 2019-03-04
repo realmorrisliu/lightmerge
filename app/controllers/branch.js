@@ -5,6 +5,7 @@ const {
   setRecentRepos,
   getRecentRepos,
   runLightmerge,
+  pullLatestCode,
 } = require('../models/branch');
 const type = require('../utils/type');
 const Log = require('../utils/logger');
@@ -12,7 +13,8 @@ const Log = require('../utils/logger');
 const handleGetBranchList = async ({ query, response }) => {
   const { path: pathToRepo } = query;
 
-  const list = await getBranchList(pathToRepo);
+  const fullList = await getBranchList(pathToRepo);
+  const list = fullList.filter(branch => !branch.includes('origin')).sort().reverse();
   setRecentRepos(pathToRepo);
 
   if (type.isArray(list)) {
@@ -40,15 +42,10 @@ const handleGetBranchSelected = async ({ query, response }) => {
   };
 };
 const handlePostBranchLightmerge = async ({ request, response }) => {
-  const {
-    path,
-    list,
-    username,
-    password,
-  } = request.body;
+  const { path, list } = request.body;
 
   setSelectedBranchList(path, list);
-  const { conflictBranch, conflictFiles } = await runLightmerge(path, list, username, password);
+  const { conflictBranch, conflictFiles } = await runLightmerge(path, list);
 
   if (type.isUndefined(conflictFiles)) {
     response.body = {
@@ -77,8 +74,27 @@ const handleGetRecentRepos = async ({ response }) => {
   };
 };
 
+const handlePullLatestCode = async ({ request, response }) => {
+  const { path, username, password } = request.body;
+
+  const error = await pullLatestCode(path, username, password);
+
+  if (error) {
+    response.body = {
+      code: 200,
+      message: error,
+    };
+  }
+
+  response.body = {
+    code: 200,
+    message: 'success',
+  };
+};
+
 module.exports = {
   'GET /repo/list': handleGetRecentRepos,
+  'POST /repo/pull': handlePullLatestCode,
   'GET /branch/list': handleGetBranchList,
   'GET /branch/selected': handleGetBranchSelected,
   'POST /branch/lightmerge': handlePostBranchLightmerge,
