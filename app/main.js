@@ -26,6 +26,6 @@ app.use(async (ctx, next) => {
 });
 app.use(controller());
 
-const port = 9001;
+const port = 9002;
 app.listen(port);
 Log.debug(`Listening on port ${port}`);
