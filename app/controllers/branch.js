@@ -102,13 +102,20 @@ const handlePullLatestCode = async ({ request, response }) => {
 const handleDeploy = async ({ request, response }) => {
   const { path } = request.body;
 
-  const error = await depoly(path);
+  const result = await depoly(path);
 
-  response.body = {
-    code: 200,
-    message: 'failed',
-    error,
-  };
+  if (result.error) {
+    response.body = {
+      code: 200,
+      message: 'failed',
+    };
+  } else {
+    response.body = {
+      code: 200,
+      message: 'success',
+      ...result,
+    };
+  }
 };
 
 module.exports = {

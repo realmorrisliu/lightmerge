@@ -66,7 +66,7 @@ const deploy = async () => new Promise((resolve) => {
     path: Repo.getPath(),
   }).then((result) => {
     if (result.code === 200) {
-      resolve(result.message);
+      resolve(result);
     }
   });
 });

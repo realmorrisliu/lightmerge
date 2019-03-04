@@ -94,8 +94,8 @@ export default class App extends React.Component {
   };
 
   deployLightmerge = async () => {
-    const result = await deploy();
-    this.setLogs(result);
+    const { error, stdout, stderr } = await deploy();
+    this.setLogs(error || stdout || stderr);
   };
 
   searchRepo = async () => {
