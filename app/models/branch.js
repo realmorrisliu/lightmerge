@@ -127,6 +127,15 @@ const pullLatestCode = async (path, username, password) => {
 };
 
 const depoly = async (path) => {
+  exec('pwd', (error, stdout, stderr) => {
+    if (error) {
+      console.error(`执行出错: ${error}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.log(`stderr: ${stderr}`);
+  });
+
   exec(`./lightmerge.sh ${path}`, (error, stdout, stderr) => {
     if (error) {
       console.error(`执行出错: ${error}`);
