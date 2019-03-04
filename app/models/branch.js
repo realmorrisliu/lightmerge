@@ -127,7 +127,7 @@ const pullLatestCode = async (path, username, password) => {
 };
 
 const depoly = async (path) => {
-  execFile('lightmerge.sh', path);
+  execFile('lightmerge.sh', [path]);
 };
 
 module.exports = {
