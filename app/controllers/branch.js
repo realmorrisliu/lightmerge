@@ -104,17 +104,10 @@ const handleDeploy = async ({ request, response }) => {
 
   const error = await depoly(path);
 
-  if (error) {
-    response.body = {
-      code: 200,
-      message: 'failed',
-      error,
-    };
-  }
-
   response.body = {
     code: 200,
-    message: 'success',
+    message: 'failed',
+    error,
   };
 };
 
