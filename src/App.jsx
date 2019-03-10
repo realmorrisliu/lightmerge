@@ -1,4 +1,6 @@
 import React from 'react';
+import DevTools from 'mobx-react-devtools';
+import { inject } from 'mobx-react';
 import BranchSelector from './components/BranchSelector';
 import StatusViewer from './components/StatusViewer';
 import UserIcon from './avatar.jpeg';
@@ -15,6 +17,7 @@ import {
 
 import styles from './App.module.scss';
 
+@inject('store')
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -168,6 +171,10 @@ class App extends React.Component {
       pathToRepo, lightmerged, recentRepos, branchList, selectedBranchList, logs, showLogin,
     } = this.state;
 
+    /* eslint-disable */
+    const { store } = this.props;
+    console.log(store);
+
     return (
       <div className={styles.App}>
         {
@@ -251,8 +258,14 @@ class App extends React.Component {
             alreadySelected={selectedBranchList}
             onChange={this.handleBranchClick}
           />
-          <StatusViewer selectedBranches={selectedBranchList} logs={logs} branchList={branchList} />
+          <StatusViewer
+            selectedBranches={selectedBranchList}
+            logs={logs}
+            branchList={branchList}
+          />
         </div>
+
+        <DevTools />
       </div>
     );
   }
