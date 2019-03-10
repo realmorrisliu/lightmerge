@@ -10,6 +10,8 @@
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
     "log4js": "^4.0.2",
+    "mobx": "^5.9.0",
+    "mobx-react": "^5.4.3",
     "node-sass": "^4.11.0",
     "nodegit": "^0.24.1",
     "prop-types": "^15.7.2",
