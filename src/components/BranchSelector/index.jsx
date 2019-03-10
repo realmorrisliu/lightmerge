@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import SingleBranch from './SingleBranch';
-import GroupBranch from './GroupBranch';
+import SingleBranch from '../SingleBranch';
+import GroupBranch from '../GroupBranch';
 import './BranchSelector.scss';
 
 const BranchSelector = (

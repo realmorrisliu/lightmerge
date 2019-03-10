@@ -15,8 +15,7 @@ import {
 
 import styles from './App.module.scss';
 
-export default class App extends React.Component {
-
+class App extends React.Component {
   constructor(props) {
     super(props);
 
@@ -29,7 +28,7 @@ export default class App extends React.Component {
       recentRepos: [],
       selectedBranchList: [],
     };
-  };
+  }
 
   componentDidMount() {
     getRecentRepos().then((recentRepos) => {
@@ -40,21 +39,27 @@ export default class App extends React.Component {
   setPathToRepo = (path) => {
     this.setState({ pathToRepo: path });
   };
+
   setLogs = (logs) => {
     this.setState({ logs });
   };
+
   setLightmergeStatus = (status) => {
     this.setState({ lightmerged: status });
   };
+
   setBranchList = (list) => {
     this.setState({ branchList: list });
   };
+
   setRecentRepos = (list) => {
     this.setState({ recentRepos: list });
   };
+
   setSelectedBranchList = (list) => {
     this.setState({ selectedBranchList: list });
   };
+
   setShowLogin = (show) => {
     this.setState({ showLogin: show });
   };
@@ -130,7 +135,7 @@ export default class App extends React.Component {
   handleRecentClicked = (repo) => {
     this.setPathToRepo(repo);
     this.resetState();
-    this.refs.pathInput.focus();
+    this.pathInput.focus();
   };
 
   resetState = () => {
@@ -159,7 +164,9 @@ export default class App extends React.Component {
   };
 
   render() {
-    const { pathToRepo, lightmerged, recentRepos, branchList, selectedBranchList, logs, showLogin } = this.state;
+    const {
+      pathToRepo, lightmerged, recentRepos, branchList, selectedBranchList, logs, showLogin,
+    } = this.state;
 
     return (
       <div className={styles.App}>
@@ -181,7 +188,7 @@ export default class App extends React.Component {
                     onChange={this.handlePasswordInput}
                     placeholder="Password"
                   />
-                  <button className={styles.Button} onClick={this.handleLogin}>OK</button>
+                  <button type="button" className={styles.Button} onClick={this.handleLogin}>OK</button>
                 </div>
               </div>
             )
@@ -189,13 +196,15 @@ export default class App extends React.Component {
         }
 
         <div className={styles.ActionBar}>
-          <div className={styles.User}>
-            <img alt="user avatar" className={styles.Avatar} src={UserIcon} onClick={this.startLogin} />
-          </div>
+          <button type="button" className={styles.User} onClick={this.startLogin}>
+            <img alt="user avatar" className={styles.Avatar} src={UserIcon} />
+          </button>
           <input
             className={styles.RepoPath}
             type="text"
-            ref="pathInput"
+            ref={(c) => {
+              this.pathInput = c;
+            }}
             placeholder="Repository Path"
             value={pathToRepo}
             onChange={this.handlePathChange}
@@ -210,8 +219,13 @@ export default class App extends React.Component {
           >
             lightmerge
           </button>
-          <button type="button" className={styles.Button} disabled={!lightmerged}
-                  onClick={this.deployLightmerge}>deploy
+          <button
+            type="button"
+            className={styles.Button}
+            disabled={!lightmerged}
+            onClick={this.deployLightmerge}
+          >
+            deploy
           </button>
         </div>
 
@@ -243,3 +257,5 @@ export default class App extends React.Component {
     );
   }
 }
+
+export default App;

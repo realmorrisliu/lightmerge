@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import BranchInfo from './BranchInfo';
-import LogWindow from './LogWindow';
+import BranchInfo from '../BranchInfo';
+import LogWindow from '../LogWindow';
 import styles from './StatusViewer.module.scss';
 
 const StatusViewer = ({ branchList, selectedBranches, logs }) => (

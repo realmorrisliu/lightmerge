@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import BranchBlock from './BranchBlock';
-import Repo from '../../../utils/repo';
+import Repo from '../../utils/repo';
 import styles from './BranchInfo.module.scss';
 
 const setBaseBranch = (e) => {
