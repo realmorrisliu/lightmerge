@@ -7,6 +7,7 @@ const {
   Merge,
   Index,
   Cred,
+  Fetch,
 } = require('nodegit');
 
 const {
@@ -106,6 +107,7 @@ const pullLatestCode = async (path, username, password) => {
   Log.debug('Pulling the latest code...');
   try {
     await repo.fetchAll({
+      prune: Fetch.PRUNE.GIT_FETCH_PRUNE,
       callbacks: {
         credentials: () => Cred.userpassPlaintextNew(username, password),
       },
