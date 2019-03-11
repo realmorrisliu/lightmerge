@@ -122,7 +122,6 @@ const pullLatestCode = async (path, username, password) => {
   const remoteList = list.filter(branch => branch.includes('origin')).filter(branch => !branch.includes('master'));
 
   const removedBranches = localList.filter(branch => !remoteList.includes(`origin/${branch}`));
-  Log.debug(removedBranches);
   removedBranches.forEach(async (branch) => {
     const ref = await repo.getBranch(branch);
     await Branch.delete(ref);
