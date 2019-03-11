@@ -120,8 +120,11 @@ const pullLatestCode = async (path, username, password) => {
   const list = await getBranchList(path);
   const localList = list.filter(branch => !branch.includes('origin')).filter(branch => !branch.includes('master'));
   const remoteList = list.filter(branch => branch.includes('origin')).filter(branch => !branch.includes('master'));
-  Log.debug(localList);
-  Log.debug(remoteList);
+
+  const localBranchPrefixed = localList.map(branch => `origin/${branch}`);
+  const removedBranches = localBranchPrefixed.filter(branch => !remoteList.includes(branch));
+  Log.debug(removedBranches);
+
   remoteList.forEach(async (remoteBranch) => {
     const localBranch = remoteBranch.slice(remoteBranch.indexOf('/') + 1);
     const remoteBranchCommit = await repo.getBranchCommit(remoteBranch);
