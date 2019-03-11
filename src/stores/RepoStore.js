@@ -62,26 +62,19 @@ export default class RepoStore {
     );
   }
 
-  @action resetStore = () => {
-    this.path = '';
-    this.base = '';
-    this.branches = [];
-    this.branchesLoadingStatus = Status.UNLOAD;
-    this.recentRepos = [];
-    this.recentReposLoadingStatus = Status.UNLOAD;
-    this.selectedBranches = [];
-    this.selectedBranchesLoadingStatus = Status.UNLOAD;
-    this.lightmergeStatus = Status.UNLOAD;
-    this.deployStatus = Status.UNLOAD;
-  };
-
   @action resetLightmerge = () => {
     this.lightmergeStatus = Status.UNLOAD;
   };
 
   @action updatePath = (path) => {
-    this.resetStore();
     this.path = path;
+    this.base = '';
+    this.branches = [];
+    this.branchesLoadingStatus = Status.UNLOAD;
+    this.selectedBranches = [];
+    this.selectedBranchesLoadingStatus = Status.UNLOAD;
+    this.lightmergeStatus = Status.UNLOAD;
+    this.deployStatus = Status.UNLOAD;
   };
 
   @action updateBase = (e) => {
