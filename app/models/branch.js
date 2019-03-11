@@ -137,7 +137,7 @@ const pullLatestCode = async (path, username, password) => {
 };
 
 const depoly = async (path) => {
-  const repoName = path.reverse().split('/').shift();
+  const repoName = path.split('/').pop();
   Log.debug(repoName);
 
   const execDeployScript = new Promise((resolve) => {
