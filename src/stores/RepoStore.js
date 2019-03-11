@@ -62,6 +62,10 @@ export default class RepoStore {
     );
   }
 
+  @computed get isBranchesLoading() {
+    return this.branchesLoadingStatus === Status.LOADING;
+  }
+
   @action resetLightmerge = () => {
     this.lightmergeStatus = Status.UNLOAD;
   };

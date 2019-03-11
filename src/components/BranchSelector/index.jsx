@@ -2,8 +2,9 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import SingleBranch from '../SingleBranch';
 import GroupBranch from '../GroupBranch';
-import './BranchSelector.scss';
+import Loading from '../Loading';
 import store from '../../stores/RootStore';
+import './BranchSelector.scss';
 
 @observer
 class BranchSelector extends React.Component {
@@ -41,37 +42,43 @@ class BranchSelector extends React.Component {
     return (
       <div className="Branch">
         <h2 className="Title">Select Branches</h2>
-        <div className="List">
-          {
-            Object.entries(branches).map(([branch, { checked, subBranches }]) => {
-              const folded = subBranches.every(subBranch => subBranch.checked === false);
+        {
+          repo.isBranchesLoading
+            ? <Loading />
+            : (
+              <div className="List">
+                {
+                  Object.entries(branches).map(([branch, { checked, subBranches }]) => {
+                    const folded = subBranches.every(subBranch => subBranch.checked === false);
 
-              return (
-                subBranches.length === 0
-                  ? (
-                    <SingleBranch
-                      key={branch}
-                      text={branch}
-                      checked={checked}
-                      isGroup={false}
-                      onClick={() => {
-                        this.handleBranchSelection(branch);
-                      }}
-                    />
-                  )
-                  : (
-                    <GroupBranch
-                      key={branch}
-                      text={branch}
-                      folded={folded}
-                      subBranches={subBranches}
-                      onChildClicked={this.handleBranchSelection}
-                    />
-                  )
-              );
-            })
-          }
-        </div>
+                    return (
+                      subBranches.length === 0
+                        ? (
+                          <SingleBranch
+                            key={branch}
+                            text={branch}
+                            checked={checked}
+                            isGroup={false}
+                            onClick={() => {
+                              this.handleBranchSelection(branch);
+                            }}
+                          />
+                        )
+                        : (
+                          <GroupBranch
+                            key={branch}
+                            text={branch}
+                            folded={folded}
+                            subBranches={subBranches}
+                            onChildClicked={this.handleBranchSelection}
+                          />
+                        )
+                    );
+                  })
+                }
+              </div>
+            )
+        }
       </div>
     );
   }
