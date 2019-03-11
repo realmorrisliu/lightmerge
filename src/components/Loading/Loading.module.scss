@@ -28,7 +28,7 @@
     border-radius: 0 200px 200px 0;
 
     transform-origin: 0 calc(#{$radius} / 2);
-    animation: loading 2s infinite linear;
+    animation: loading 0.5s infinite linear;
   }
 
   @keyframes loading {
