@@ -1,6 +1,6 @@
 import { Get, Post } from '../utils/network';
-import Repo from '../utils/repo';
 import Auth from '../utils/auth';
+import store from '../stores/RootStore';
 
 const API = {
   getBranchList: '/branch/list',
@@ -13,7 +13,7 @@ const API = {
 
 const getBranchList = async () => new Promise((resolve) => {
   Get(API.getBranchList, {
-    path: Repo.getPath(),
+    path: store.repo.path,
   }).then((result) => {
     if (result.code === 200) {
       resolve(result.data);
@@ -23,7 +23,7 @@ const getBranchList = async () => new Promise((resolve) => {
 
 const getSelectedBranchList = async () => new Promise((resolve) => {
   Get(API.getSelectedBranchList, {
-    path: Repo.getPath(),
+    path: store.repo.path,
   }).then((result) => {
     if (result.code === 200) {
       resolve(result.data);
@@ -33,9 +33,9 @@ const getSelectedBranchList = async () => new Promise((resolve) => {
 
 const updateBranchLightmerge = async selectedBranchList => new Promise((resolve) => {
   Post(API.updateBranchLightmerge, {
-    path: Repo.getPath(),
+    path: store.repo.path,
     list: selectedBranchList,
-    base: Repo.getBase(),
+    base: store.repo.base,
   }).then((result) => {
     if (result.code === 200) {
       resolve(result.error);
@@ -53,7 +53,7 @@ const getRecentRepos = async () => new Promise((resolve) => {
 
 const pullLatestCode = async () => new Promise((resolve) => {
   Post(API.pullLatestCode, {
-    path: Repo.getPath(),
+    path: store.repo.path,
     ...Auth.getAuth(),
   }).then((result) => {
     if (result.code === 200) {
@@ -64,7 +64,7 @@ const pullLatestCode = async () => new Promise((resolve) => {
 
 const deploy = async () => new Promise((resolve) => {
   Post(API.deploy, {
-    path: Repo.getPath(),
+    path: store.repo.path,
   }).then((result) => {
     if (result.code === 200) {
       resolve(result);

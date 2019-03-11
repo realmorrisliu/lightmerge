@@ -1,15 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { observer } from 'mobx-react';
+import store from '../../stores/RootStore';
 import styles from './LogWindow.module.scss';
 
-const LogWindow = ({ logs }) => (
-  <div className={styles.LogWindow}>
-    {logs}
-  </div>
-);
+@observer
+class LogWindow extends React.Component {
+  render() {
+    const { log } = store;
 
-LogWindow.propTypes = {
-  logs: PropTypes.string.isRequired,
-};
+    return (
+      <div className={styles.LogWindow}>
+        {log.logs.join('')}
+      </div>
+    );
+  }
+}
 
 export default LogWindow;

@@ -1,20 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { observer } from 'mobx-react';
 import BranchInfo from '../BranchInfo';
 import LogWindow from '../LogWindow';
+import store from '../../stores/RootStore';
 import styles from './StatusViewer.module.scss';
 
-const StatusViewer = ({ branchList, selectedBranches, logs }) => (
-  <div className={styles.StatusViewer}>
-    <BranchInfo branchList={branchList} selectedBranchList={selectedBranches} />
-    <LogWindow logs={logs} />
-  </div>
-);
+@observer
+class StatusViewer extends React.Component {
+  render() {
+    const { repo } = store;
 
-StatusViewer.propTypes = {
-  branchList: PropTypes.arrayOf(PropTypes.string).isRequired,
-  selectedBranches: PropTypes.arrayOf(PropTypes.string).isRequired,
-  logs: PropTypes.string.isRequired,
-};
+    return (
+      <div className={styles.StatusViewer}>
+        <BranchInfo branchList={repo.branches} selectedBranchList={repo.selectedBranches} />
+        <LogWindow />
+      </div>
+    );
+  }
+}
 
 export default StatusViewer;

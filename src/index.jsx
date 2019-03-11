@@ -6,7 +6,7 @@ import App from './App';
 import RootStore from './stores/RootStore';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<Provider store={new RootStore()}><App /></Provider>, document.getElementById('root'));
+ReactDOM.render(<Provider store={RootStore}><App /></Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

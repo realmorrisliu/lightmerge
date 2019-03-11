@@ -1,80 +1,80 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { observer } from 'mobx-react';
 import SingleBranch from '../SingleBranch';
 import GroupBranch from '../GroupBranch';
 import './BranchSelector.scss';
+import store from '../../stores/RootStore';
 
-const BranchSelector = (
-  {
-    branchList,
-    alreadySelected,
-    onChange,
-  },
-) => {
-  const branches = {};
-  branchList.forEach((branch) => {
-    const [name, sub] = branch.split('/');
+@observer
+class BranchSelector extends React.Component {
+  handleBranchSelection = (branchName) => {
+    const { repo } = store;
+    repo.resetLightmerge();
 
-    if (!branches[name]) {
-      branches[name] = {
-        checked: alreadySelected.includes(name),
-        subBranches: [],
-      };
+    if (repo.selectedBranches.includes(branchName)) {
+      repo.updateSelectedBranches(repo.selectedBranches.filter(branch => branch !== branchName));
+    } else {
+      repo.updateSelectedBranches(repo.selectedBranches.concat(branchName));
     }
-    if (sub) {
-      branches[name].subBranches.push({
-        name: sub,
-        checked: alreadySelected.includes(branch),
-      });
-    }
-  });
-
-  const handleBranchSelection = (branchName) => {
-    onChange(branchName);
   };
 
-  return (
-    <div className="Branch">
-      <h2 className="Title">Select Branches</h2>
-      <div className="List">
-        {
-          Object.entries(branches).map(([branch, { checked, subBranches }]) => {
-            const folded = subBranches.every(subBranch => subBranch.checked === false);
+  render() {
+    const { repo } = store;
+    const branches = {};
+    repo.branches.forEach((branch) => {
+      const [name, sub] = branch.split('/');
 
-            return (
-              subBranches.length === 0
-                ? (
-                  <SingleBranch
-                    key={branch}
-                    text={branch}
-                    checked={checked}
-                    isGroup={false}
-                    onClick={() => {
-                      handleBranchSelection(branch);
-                    }}
-                  />
-                )
-                : (
-                  <GroupBranch
-                    key={branch}
-                    text={branch}
-                    folded={folded}
-                    subBranches={subBranches}
-                    onChildClicked={handleBranchSelection}
-                  />
-                )
-            );
-          })
-        }
+      if (!branches[name]) {
+        branches[name] = {
+          checked: repo.selectedBranches.includes(name),
+          subBranches: [],
+        };
+      }
+      if (sub) {
+        branches[name].subBranches.push({
+          name: sub,
+          checked: repo.selectedBranches.includes(branch),
+        });
+      }
+    });
+
+    return (
+      <div className="Branch">
+        <h2 className="Title">Select Branches</h2>
+        <div className="List">
+          {
+            Object.entries(branches).map(([branch, { checked, subBranches }]) => {
+              const folded = subBranches.every(subBranch => subBranch.checked === false);
+
+              return (
+                subBranches.length === 0
+                  ? (
+                    <SingleBranch
+                      key={branch}
+                      text={branch}
+                      checked={checked}
+                      isGroup={false}
+                      onClick={() => {
+                        this.handleBranchSelection(branch);
+                      }}
+                    />
+                  )
+                  : (
+                    <GroupBranch
+                      key={branch}
+                      text={branch}
+                      folded={folded}
+                      subBranches={subBranches}
+                      onChildClicked={this.handleBranchSelection}
+                    />
+                  )
+              );
+            })
+          }
+        </div>
       </div>
-    </div>
-  );
-};
-
-BranchSelector.propTypes = {
-  branchList: PropTypes.arrayOf(PropTypes.string).isRequired,
-  alreadySelected: PropTypes.arrayOf(PropTypes.string).isRequired,
-  onChange: PropTypes.func.isRequired,
-};
+    );
+  }
+}
 
 export default BranchSelector;

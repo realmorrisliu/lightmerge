@@ -1,35 +1,25 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import DevTools from 'mobx-react-devtools';
-import { inject } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import BranchSelector from './components/BranchSelector';
 import StatusViewer from './components/StatusViewer';
 import UserIcon from './avatar.jpeg';
-import Repo from './utils/repo';
 import Auth from './utils/auth';
 import {
-  getBranchList,
-  getSelectedBranchList,
-  updateBranchLightmerge,
   getRecentRepos,
-  pullLatestCode,
-  deploy,
 } from './controllers/Branch';
 
 import styles from './App.module.scss';
 
 @inject('store')
+@observer
 class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      logs: '',
-      pathToRepo: '',
-      lightmerged: false,
       showLogin: true,
-      branchList: [],
-      recentRepos: [],
-      selectedBranchList: [],
     };
   }
 
@@ -39,113 +29,22 @@ class App extends React.Component {
     });
   }
 
-  setPathToRepo = (path) => {
-    this.setState({ pathToRepo: path });
-  };
-
-  setLogs = (logs) => {
-    this.setState({ logs });
-  };
-
-  setLightmergeStatus = (status) => {
-    this.setState({ lightmerged: status });
-  };
-
-  setBranchList = (list) => {
-    this.setState({ branchList: list });
-  };
-
-  setRecentRepos = (list) => {
-    this.setState({ recentRepos: list });
-  };
-
-  setSelectedBranchList = (list) => {
-    this.setState({ selectedBranchList: list });
-  };
-
   setShowLogin = (show) => {
     this.setState({ showLogin: show });
   };
 
-  handleBranchClick = (branchName) => {
-    const { selectedBranchList } = this.state;
-
-    this.setLightmergeStatus(false);
-
-    if (selectedBranchList.includes(branchName)) {
-      this.setSelectedBranchList(selectedBranchList.filter(branch => branch !== branchName));
-    } else {
-      this.setSelectedBranchList(selectedBranchList.concat(branchName));
-    }
-  };
-
-  isLightmergeAvailable = () => {
-    const { selectedBranchList } = this.state;
-
-    return selectedBranchList.length !== 0;
-  };
-
-  runLightmerge = async () => {
-    const { selectedBranchList } = this.state;
-
-    const error = await updateBranchLightmerge(selectedBranchList);
-    if (error) {
-      this.setLogs(error);
-    } else {
-      this.setLogs('lightmerge succeeded');
-      this.setLightmergeStatus(true);
-    }
-  };
-
-  deployLightmerge = async () => {
-    const { error, stdout, stderr } = await deploy();
-    this.setLogs(error || stdout || stderr);
-  };
-
-  searchRepo = async () => {
-    const { pathToRepo } = this.state;
-
-    Repo.setPath(pathToRepo);
-
-    const error = await pullLatestCode();
-    if (error) {
-      this.setLogs(error);
-    }
-
-    const tempSelected = await getSelectedBranchList();
-    const branches = await getBranchList();
-    const recent = await getRecentRepos();
-
-    const selected = tempSelected.filter(item => branches.includes(item));
-    this.setSelectedBranchList(selected);
-    this.setBranchList(branches);
-    this.setRecentRepos(recent);
-    Repo.setBase(Repo.getBase() || branches[0] || 'master');
-  };
-
   handleRepoEnter = (e) => {
     if (e.key === 'Enter') {
-      this.setLightmergeStatus(false);
-      this.searchRepo();
+      const { store } = this.props;
+      store.repo.getRepoInfo();
     }
-  };
-
-  handlePathChange = (e) => {
-    this.setPathToRepo(e.target.value);
-    this.resetState();
   };
 
   handleRecentClicked = (repo) => {
-    this.setPathToRepo(repo);
-    this.resetState();
-    this.pathInput.focus();
-  };
+    const { store } = this.props;
+    store.repo.updatePath(repo);
 
-  resetState = () => {
-    this.setLogs('');
-    this.setLightmergeStatus(false);
-    this.setBranchList([]);
-    this.setSelectedBranchList([]);
+    this.pathInput.focus();
   };
 
   handleUsernameInput = (e) => {
@@ -167,13 +66,11 @@ class App extends React.Component {
   };
 
   render() {
-    const {
-      pathToRepo, lightmerged, recentRepos, branchList, selectedBranchList, logs, showLogin,
-    } = this.state;
-
-    /* eslint-disable */
     const { store } = this.props;
-    console.log(store);
+
+    const {
+      showLogin,
+    } = this.state;
 
     return (
       <div className={styles.App}>
@@ -213,24 +110,25 @@ class App extends React.Component {
               this.pathInput = c;
             }}
             placeholder="Repository Path"
-            value={pathToRepo}
-            onChange={this.handlePathChange}
+            value={store.repo.path}
+            onChange={store.repo.updatePath}
             onKeyPress={this.handleRepoEnter}
+            disabled={store.repo.hasRunningAction}
           />
 
           <button
             type="button"
             className={styles.Button}
-            disabled={!this.isLightmergeAvailable()}
-            onClick={this.runLightmerge}
+            disabled={!store.repo.lightmergeEnabled}
+            onClick={store.repo.lightmerge}
           >
             lightmerge
           </button>
           <button
             type="button"
             className={styles.Button}
-            disabled={!lightmerged}
-            onClick={this.deployLightmerge}
+            disabled={!store.repo.deployEnabled}
+            onClick={store.repo.deploy}
           >
             deploy
           </button>
@@ -238,7 +136,7 @@ class App extends React.Component {
 
         <div className={styles.RecentRepos}>
           {
-            recentRepos.map(repo => (
+            store.repo.recentRepos.map(repo => (
               <code>
                 <button
                   type="button"
@@ -253,16 +151,8 @@ class App extends React.Component {
         </div>
 
         <div className={styles.Content}>
-          <BranchSelector
-            branchList={branchList}
-            alreadySelected={selectedBranchList}
-            onChange={this.handleBranchClick}
-          />
-          <StatusViewer
-            selectedBranches={selectedBranchList}
-            logs={logs}
-            branchList={branchList}
-          />
+          <BranchSelector />
+          <StatusViewer />
         </div>
 
         <DevTools />
@@ -270,5 +160,9 @@ class App extends React.Component {
     );
   }
 }
+
+App.wrappedComponent.propTypes = {
+  store: PropTypes.objectOf(PropTypes.object).isRequired,
+};
 
 export default App;

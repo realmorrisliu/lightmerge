@@ -1,18 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import BranchBlock from './BranchBlock';
-import Repo from '../../utils/repo';
 import styles from './BranchInfo.module.scss';
-
-const setBaseBranch = (e) => {
-  Repo.setBase(e.target.value);
-};
+import store from '../../stores/RootStore';
 
 const BranchInfo = ({ branchList, selectedBranchList }) => (
   <div className={styles.BranchInfo}>
     <div className={styles.Base}>
       <span className={styles.Type}>Base branch:</span>
-      <select className={styles.BaseBranch} onChange={setBaseBranch}>
+      <select className={styles.BaseBranch} onChange={store.repo.updateBase}>
         {
           branchList.map(branch => <option key={branch} value={branch}>{branch}</option>)
         }
