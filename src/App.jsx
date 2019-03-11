@@ -6,9 +6,6 @@ import BranchSelector from './components/BranchSelector';
 import StatusViewer from './components/StatusViewer';
 import UserIcon from './avatar.jpeg';
 import Auth from './utils/auth';
-import {
-  getRecentRepos,
-} from './controllers/Branch';
 
 import styles from './App.module.scss';
 
@@ -24,9 +21,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    getRecentRepos().then((recentRepos) => {
-      this.setRecentRepos(recentRepos);
-    });
+    const { store } = this.props;
+    store.repo.updateRecentRepos();
   }
 
   setShowLogin = (show) => {

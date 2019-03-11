@@ -15,7 +15,6 @@ const handleGetBranchList = async ({ query, response }) => {
 
   const fullList = await getBranchList(pathToRepo);
   const list = fullList.filter(branch => !branch.includes('origin')).sort().reverse();
-  setRecentRepos(pathToRepo);
 
   if (type.isArray(list)) {
     response.body = {
@@ -82,6 +81,8 @@ const handleGetRecentRepos = async ({ response }) => {
 
 const handlePullLatestCode = async ({ request, response }) => {
   const { path, username, password } = request.body;
+
+  setRecentRepos(path);
 
   const error = await pullLatestCode(path, username, password);
 
