@@ -79,9 +79,9 @@ export default class RepoStore {
     this.lightmergeStatus = Status.UNLOAD;
   };
 
-  @action updatePath = (e) => {
+  @action updatePath = (path) => {
     this.resetStore();
-    this.path = e.target.value;
+    this.path = path;
   };
 
   @action updateBase = (e) => {

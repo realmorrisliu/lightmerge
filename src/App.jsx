@@ -107,7 +107,9 @@ class App extends React.Component {
             }}
             placeholder="Repository Path"
             value={store.repo.path}
-            onChange={store.repo.updatePath}
+            onChange={(e) => {
+              store.repo.updatePath(e.target.value);
+            }}
             onKeyPress={this.handleRepoEnter}
             disabled={store.repo.hasRunningAction}
           />
