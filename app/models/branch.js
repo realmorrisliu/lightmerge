@@ -138,10 +138,10 @@ const pullLatestCode = async (path, username, password) => {
 
 const depoly = async (path) => {
   const repoName = path.split('/').pop();
-  Log.debug(repoName);
+  const scriptPath = `./deployScripts/${repoName}`;
 
   const execDeployScript = new Promise((resolve) => {
-    exec(`./lightmerge.sh ${path}`, (error, stdout, stderr) => {
+    exec(scriptPath, (error, stdout, stderr) => {
       if (error) {
         resolve({
           error,
