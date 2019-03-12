@@ -77,6 +77,7 @@ const runLightmerge = async (path, list, baseBranch) => {
     /* eslint-disable no-restricted-syntax */
     for (const branch of list) {
       try {
+        io.emit(WS_EVENT.MESSAGE, `Merging branch ${branch} to lightmerge...`);
         /* eslint-disable no-await-in-loop */
         await repo.mergeBranches(
           'lightmerge',
@@ -85,8 +86,7 @@ const runLightmerge = async (path, list, baseBranch) => {
           Merge.PREFERENCE.NO_FASTFORWARD,
           null,
         );
-
-        io.emit(WS_EVENT.MESSAGE, `Merging branch ${branch} to lightmerge...`);
+        io.emit(WS_EVENT.MESSAGE, 'Succeeded');
       } catch (index) {
         conflictBranch = branch;
 
