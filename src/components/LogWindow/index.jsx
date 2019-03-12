@@ -29,8 +29,9 @@ Socket.on(WS_EVENT.MESSAGE, (value) => {
 @observer
 class LogWindow extends React.Component {
   render() {
-    console.log(this.logWindow);
-    // this.logWindow.scrollTop(Number.MAX_VALUE);
+    if (this.logWindow) {
+      this.logWindow.scrollTop(Number.MAX_VALUE);
+    }
 
     return (
       <div
