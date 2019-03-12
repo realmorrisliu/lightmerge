@@ -29,8 +29,15 @@ Socket.on(WS_EVENT.MESSAGE, (value) => {
 @observer
 class LogWindow extends React.Component {
   render() {
+    this.logWindow.scrollTop(Number.MAX_VALUE);
+
     return (
-      <div className={styles.LogWindow}>
+      <div
+        ref={(c) => {
+          this.logWindow = c;
+        }}
+        className={styles.LogWindow}
+      >
         {store.log.logs.map(log => (
           <>
             {log}
