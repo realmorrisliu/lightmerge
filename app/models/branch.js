@@ -68,6 +68,7 @@ const runLightmerge = async (path, list, baseBranch) => {
   io.emit(WS_EVENT.MESSAGE, `Overwrite lightmerge with ${baseBranch}`);
 
   const signature = Signature.default(repo);
+  let currentBranch;
   let conflictFiles;
   let conflictBranch;
 
@@ -75,9 +76,12 @@ const runLightmerge = async (path, list, baseBranch) => {
     await repo.createBranch('lightmerge', baseCommit, true);
 
     /* eslint-disable no-restricted-syntax */
-    for (const branch of list) {
-      try {
+
+    try {
+      for (const branch of list) {
         io.emit(WS_EVENT.MESSAGE, `Merging branch ${branch} to lightmerge...`);
+
+        currentBranch = branch;
         /* eslint-disable no-await-in-loop */
         await repo.mergeBranches(
           'lightmerge',
@@ -86,22 +90,24 @@ const runLightmerge = async (path, list, baseBranch) => {
           Merge.PREFERENCE.NO_FASTFORWARD,
           null,
         );
+
         io.emit(WS_EVENT.MESSAGE, 'Succeeded');
-      } catch (index) {
-        conflictBranch = branch;
-
-        conflictFiles = [
-          ...new Set(
-            index
-              .entries()
-              .filter(entry => Index.entryIsConflict(entry))
-              .map(entry => entry.path),
-          ),
-        ];
-
-        io.emit(WS_EVENT.MESSAGE, `You have conflicts on file "${conflictFiles}" when merging branch "${conflictBranch}"`);
       }
+    } catch (index) {
+      conflictBranch = currentBranch;
+
+      conflictFiles = [
+        ...new Set(
+          index
+            .entries()
+            .filter(entry => Index.entryIsConflict(entry))
+            .map(entry => entry.path),
+        ),
+      ];
+
+      io.emit(WS_EVENT.MESSAGE, `You have conflicts on file "${conflictFiles}" when merging branch "${conflictBranch}"`);
     }
+
 
     io.emit(WS_EVENT.MESSAGE, 'Lightmerge over');
   } catch (e) {
