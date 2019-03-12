@@ -6,8 +6,9 @@ import { Socket } from '../../utils/network';
 
 Socket.on('deploy', (value) => {
   const { log } = store;
-  console.log(value.split('\n'));
-  log.addLog(value);
+  value.split('\n').filter(line => line.length !== 0).forEach(line => {
+    log.addLog(value);
+  });
 });
 
 @observer
