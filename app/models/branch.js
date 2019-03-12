@@ -166,6 +166,9 @@ const depoly = async (path) => {
   execDeployScript.stdout.on('data', (data) => {
     io.emit(WS_EVENT.DEPLOY, data.toString());
   });
+  execDeployScript.stderr.on('data', (data) => {
+    io.emit(WS_EVENT.DEPLOY, data.toString());
+  });
   execDeployScript.on('close', (code) => {
     io.emit(WS_EVENT.DEPLOY_DONE, code);
   });
