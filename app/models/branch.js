@@ -1,4 +1,4 @@
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 const {
   Repository,
   Reference,
@@ -22,6 +22,7 @@ const {
 } = require('../utils/redis');
 
 const Log = require('../utils/logger');
+const io = require('../utils/ws')();
 
 const getBranchList = async (pathToRepo) => {
   const repo = await Repository.open(pathToRepo);
@@ -138,25 +139,31 @@ const pullLatestCode = async (path, username, password) => {
 
 const depoly = async (path) => {
   const repoName = path.split('/').pop();
-  const scriptPath = `./deployScripts/${repoName}.sh`;
+  const script = `./deployScripts/${repoName}.sh`;
 
-  const execDeployScript = new Promise((resolve) => {
-    exec(scriptPath, (error, stdout, stderr) => {
-      if (error) {
-        resolve({
-          error,
-        });
-      }
+  // const execDeployScript = new Promise((resolve) => {
+  //   exec(scriptPath, (error, stdout, stderr) => {
+  //     if (error) {
+  //       resolve({
+  //         error,
+  //       });
+  //     }
+  //
+  //     resolve({
+  //       stdout,
+  //       stderr,
+  //     });
+  //   });
+  // });
 
-      resolve({
-        stdout,
-        stderr,
-      });
-    });
+  // const result = await execDeployScript;
+
+  const execDeployScript = spawn(script);
+  execDeployScript.stdout.on('data', (data) => {
+    io.emit('data', data);
   });
 
-  const result = await execDeployScript;
-  return result || {};
+  return {};
 };
 
 module.exports = {
