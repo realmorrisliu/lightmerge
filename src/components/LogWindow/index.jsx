@@ -6,7 +6,7 @@ import { Socket } from '../../utils/network';
 
 Socket.on('deploy', (value) => {
   const { log } = store;
-  log.logs.push(value);
+  log.addLog(value);
 });
 
 @observer
