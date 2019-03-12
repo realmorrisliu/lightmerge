@@ -21,7 +21,7 @@ const {
   hdel,
 } = require('../utils/redis');
 
-const { WS_EVENT } = require('../../constants');
+const { WS_EVENT } = require('../../src/constants');
 const io = require('../utils/ws')();
 
 const getBranchList = async (pathToRepo) => {

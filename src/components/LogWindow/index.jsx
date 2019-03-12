@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import store from '../../stores/RootStore';
 import styles from './LogWindow.module.scss';
 import { Socket } from '../../utils/network';
-import { WS_EVENT } from '../../../constants';
+import { WS_EVENT } from '../../constants';
 
 Socket.on(WS_EVENT.CLEAR, () => {
   store.log.resetLogs();
