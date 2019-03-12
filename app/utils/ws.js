@@ -1,16 +1,16 @@
 const io = require('socket.io');
 
 class WS {
-  constructor(httpServer) {
-    this.io = io(httpServer);
-  }
+  static instance;
 
-  static getWs(httpServer) {
-    if (!this.instance) {
-      return new WS(httpServer);
+  constructor(httpServer) {
+    if (!WS.instance) {
+      this.io = io(httpServer);
+      WS.instance = this;
     }
-    return this.instance;
+
+    return WS.instance;
   }
 }
 
-module.exports = WS.getWs;
+module.exports = WS;
