@@ -11,11 +11,12 @@ const API = {
   deploy: '/deploy',
 };
 
-Socket.on('connect', (socket) => {
-  socket.on('test', (value) => {
-    console.log(value);
-  });
+Socket.on('connect', () => {
   console.log('client connect server');
+});
+
+Socket.on('test', (value) => {
+  console.log(value);
 });
 Socket.on('disconnect', () => {
   console.log('client disconnect');
