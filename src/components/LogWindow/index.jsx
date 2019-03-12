@@ -16,7 +16,7 @@ class LogWindow extends React.Component {
 
     return (
       <div className={styles.LogWindow}>
-        {log.logs.join('<br />')}
+        {log.logs.join(<br />)}
       </div>
     );
   }
