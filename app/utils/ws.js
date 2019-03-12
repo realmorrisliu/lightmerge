@@ -5,15 +5,12 @@ class WS {
     this.io = io(httpServer);
   }
 
-  static newWs(httpServer) {
+  static getWs(httpServer) {
     if (!this.instance) {
-      this.instance = new WS(httpServer);
+      return new WS(httpServer);
     }
-  }
-
-  static getWs() {
     return this.instance;
   }
 }
 
-export default WS;
+module.exports = WS.getWs;

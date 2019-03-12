@@ -11,10 +11,8 @@ const httpServer = require('http').Server(app.callback());
 const controller = require('./controller');
 const Log = require('./utils/logger');
 const { select } = require('./utils/redis');
-const WS = require('./utils/ws');
+const socket = require('./utils/ws')(httpServer);
 
-WS.newWs(httpServer);
-const socket = WS.getWs();
 socket.io.on('connection', () => {
   Log.debug('connected');
 });
