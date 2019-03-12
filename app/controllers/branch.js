@@ -103,7 +103,7 @@ const handlePullLatestCode = async ({ request, response }) => {
 const handleDeploy = async ({ request, response }) => {
   const { path } = request.body;
 
-  await depoly(path);
+  depoly(path);
 
   response.body = {
     code: 200,
