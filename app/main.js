@@ -9,14 +9,14 @@ const app = new Koa();
 const server = require('http').createServer(app.callback());
 
 const controller = require('./controller');
-const Log = require('./utils/logger');
 const { select } = require('./utils/redis');
+const Log = require('./utils/logger');
 const io = require('./utils/ws')(server);
 
+// socket.io
 io.on('connection', () => {
   Log.debug('connected');
 });
-
 
 const REDIS_DB = 1;
 
@@ -39,4 +39,3 @@ const port = 9002;
 server.listen(port, () => {
   Log.debug(`Listening on port ${port}`);
 });
-// app.listen(port);

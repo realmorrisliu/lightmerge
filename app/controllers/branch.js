@@ -9,7 +9,7 @@ const {
   depoly,
 } = require('../models/branch');
 const type = require('../utils/type');
-const socket = require('../utils/ws')();
+const io = require('../utils/ws')();
 
 const handleGetBranchList = async ({ query, response }) => {
   const { path: pathToRepo } = query;
@@ -94,6 +94,8 @@ const handlePullLatestCode = async ({ request, response }) => {
       error,
     };
   }
+
+  io.emit('test', 1);
 
   response.body = {
     code: 200,
