@@ -6,8 +6,7 @@ const bodyParser = require('koa-bodyparser');
 
 const app = new Koa();
 
-const httpServer = require('http').createServer(app.callback());
-const io = require('socket.io')(httpServer);
+const io = require('socket.io')(app);
 
 const controller = require('./controller');
 const Log = require('./utils/logger');
