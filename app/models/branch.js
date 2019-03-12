@@ -85,6 +85,8 @@ const runLightmerge = async (path, list, baseBranch) => {
           Merge.PREFERENCE.NO_FASTFORWARD,
           null,
         );
+
+        io.emit(WS_EVENT.MESSAGE, `Merging branch ${branch} to lightmerge...`);
       } catch (index) {
         conflictBranch = branch;
 
@@ -100,6 +102,8 @@ const runLightmerge = async (path, list, baseBranch) => {
         io.emit(WS_EVENT.MESSAGE, `You have conflicts on file "${conflictFiles}" when merging branch "${conflictBranch}"`);
       }
     }
+
+    io.emit(WS_EVENT.MESSAGE, 'Lightmerge over');
   } catch (e) {
     io.emit(WS_EVENT.MESSAGE, e);
   }
