@@ -30,7 +30,7 @@ Socket.on(WS_EVENT.MESSAGE, (value) => {
 class LogWindow extends React.Component {
   render() {
     if (this.logWindow) {
-      this.logWindow.scrollTop(Number.MAX_VALUE);
+      this.logWindow.scrollTop = this.logWindow.scrollHeight;
     }
 
     return (
