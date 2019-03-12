@@ -1,4 +1,4 @@
-const { spawn } = require('child_process');
+const { spawn, spawnSync } = require('child_process');
 const {
   Repository,
   Reference,
@@ -141,7 +141,7 @@ const depoly = async (path) => {
   const repoName = path.split('/').pop();
   const script = `./deployScripts/${repoName}.sh`;
 
-  const execDeployScript = spawn(script);
+  const execDeployScript = spawnSync(script);
   execDeployScript.stdout.on('data', (data) => {
     io.emit('deploy', data.toString());
   });
