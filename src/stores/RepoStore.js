@@ -39,12 +39,16 @@ export default class RepoStore {
   @observable deployStatus = Status.UNLOAD;
 
   @computed get deployEnabled() {
-    return this.lightmergeStatus === Status.SUCCESS;
+    return (
+      this.lightmergeStatus === Status.SUCCESS
+      && this.deployStatus !== Status.LOADING
+    );
   }
 
   @computed get lightmergeEnabled() {
     return (
       this.lightmergeStatus !== Status.LOADING
+      && this.deployStatus !== Status.LOADING
       && this.branchesLoadingStatus === Status.SUCCESS
       && this.recentReposLoadingStatus === Status.SUCCESS
       && this.selectedBranchesLoadingStatus === Status.SUCCESS
