@@ -141,29 +141,10 @@ const depoly = async (path) => {
   const repoName = path.split('/').pop();
   const script = `./deployScripts/${repoName}.sh`;
 
-  // const execDeployScript = new Promise((resolve) => {
-  //   exec(scriptPath, (error, stdout, stderr) => {
-  //     if (error) {
-  //       resolve({
-  //         error,
-  //       });
-  //     }
-  //
-  //     resolve({
-  //       stdout,
-  //       stderr,
-  //     });
-  //   });
-  // });
-
-  // const result = await execDeployScript;
-
   const execDeployScript = spawn(script);
   execDeployScript.stdout.on('data', (data) => {
-    io.emit('data', data.toString());
+    io.emit('deploy', data.toString());
   });
-
-  return {};
 };
 
 module.exports = {

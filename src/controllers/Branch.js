@@ -15,9 +15,6 @@ Socket.on('connect', () => {
   console.log('client connect server');
 });
 
-Socket.on('data', (value) => {
-  console.log(value);
-});
 Socket.on('disconnect', () => {
   console.log('client disconnect');
 });
