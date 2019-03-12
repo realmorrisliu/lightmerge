@@ -1,4 +1,5 @@
 import axios from 'axios';
+import io from 'socket.io';
 
 const makeAPI = api => `/api${api}`;
 const Get = (url, reqestBody) => (
@@ -18,4 +19,6 @@ const Post = (url, reqestBody) => (
     .then(result => result.data)
 );
 
-export { Get, Post };
+const Socket = io('//localhost:3000');
+
+export { Get, Post, Socket };

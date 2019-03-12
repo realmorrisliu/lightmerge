@@ -4,13 +4,23 @@ const serve = require('koa-static');
 const logger = require('koa-logger');
 const bodyParser = require('koa-bodyparser');
 
+const app = new Koa();
+
+const httpServer = require('http').Server(app.callback());
+
 const controller = require('./controller');
 const Log = require('./utils/logger');
 const { select } = require('./utils/redis');
+const WS = require('./utils/ws');
+
+WS.newWs(httpServer);
+const socket = WS.getWs();
+socket.io.on('connection', () => {
+  Log.debug('connected');
+});
 
 const REDIS_DB = 1;
 
-const app = new Koa();
 app.use(logger());
 
 const buildPath = path.join(path.resolve(__dirname, '..'), '/build');
