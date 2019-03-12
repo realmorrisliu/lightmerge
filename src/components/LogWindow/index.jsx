@@ -12,11 +12,14 @@ Socket.on('deploy', (value) => {
 @observer
 class LogWindow extends React.Component {
   render() {
-    const { log } = store;
-
     return (
       <div className={styles.LogWindow}>
-        {log.logs.join(<br />)}
+        {store.log.logs.map(log => (
+          <>
+            {log}
+            <br />
+          </>
+        ))}
       </div>
     );
   }
