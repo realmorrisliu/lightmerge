@@ -1,5 +1,5 @@
 import axios from 'axios';
-import io from 'socket.io';
+import io from 'socket.io-client';
 
 const makeAPI = api => `/api${api}`;
 const Get = (url, reqestBody) => (
