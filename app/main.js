@@ -7,14 +7,13 @@ const bodyParser = require('koa-bodyparser');
 const app = new Koa();
 
 const server = require('http').createServer(app.callback());
-const io = require('socket.io')(server);
 
 const controller = require('./controller');
 const Log = require('./utils/logger');
 const { select } = require('./utils/redis');
-// const socket = require('./utils/ws')(httpServer);
+const socket = require('./utils/ws')(server);
 
-io.on('connection', () => {
+socket.io.on('connection', () => {
   Log.debug('connected');
 });
 
