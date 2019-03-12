@@ -7,16 +7,13 @@ const bodyParser = require('koa-bodyparser');
 const app = new Koa();
 
 const httpServer = require('http').Server(app.callback());
-const socket = require('socket.io')(httpServer);
+const io = require('socket.io')(httpServer);
 
 const controller = require('./controller');
 const Log = require('./utils/logger');
 const { select } = require('./utils/redis');
 // const socket = require('./utils/ws')(httpServer);
 
-socket.on('connection', () => {
-  Log.debug('connected');
-});
 
 const REDIS_DB = 1;
 
@@ -38,3 +35,8 @@ app.use(controller());
 const port = 9002;
 app.listen(port);
 Log.debug(`Listening on port ${port}`);
+
+
+io.on('connection', () => {
+  Log.debug('connected');
+});
