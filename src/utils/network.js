@@ -19,6 +19,6 @@ const Post = (url, reqestBody) => (
     .then(result => result.data)
 );
 
-const Socket = io('//localhost:3000');
+const Socket = io('//localhost:9002');
 
 export { Get, Post, Socket };
