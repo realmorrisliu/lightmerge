@@ -74,6 +74,10 @@ export default class RepoStore {
     this.lightmergeStatus = Status.UNLOAD;
   };
 
+  @action resetDeploy = () => {
+    this.deployStatus = Status.UNLOAD;
+  };
+
   @action updatePath = (path) => {
     this.path = path;
     this.base = '';
@@ -158,10 +162,6 @@ export default class RepoStore {
 
     try {
       await deploy();
-
-      runInAction(() => {
-        this.deployStatus = Status.SUCCESS;
-      });
     } catch (e) {
       runInAction(() => {
         this.deployStatus = Status.FAILED;

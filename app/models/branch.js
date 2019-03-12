@@ -145,6 +145,9 @@ const depoly = async (path) => {
   execDeployScript.stdout.on('data', (data) => {
     io.emit('deploy', data.toString());
   });
+  execDeployScript.on('close', (code) => {
+    io.emit('deployDone', code);
+  });
 };
 
 module.exports = {

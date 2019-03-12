@@ -14,6 +14,12 @@ Socket.on('deploy', (value) => {
     });
 });
 
+Socket.on('deployDone', (value) => {
+  const { repo } = store;
+  console.log(value);
+  repo.resetDeploy();
+});
+
 @observer
 class LogWindow extends React.Component {
   render() {
