@@ -160,7 +160,7 @@ const depoly = async (path) => {
 
   const execDeployScript = spawn(script);
   execDeployScript.stdout.on('data', (data) => {
-    io.emit('data', data);
+    io.emit('data', data.toString());
   });
 
   return {};
