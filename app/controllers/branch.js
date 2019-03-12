@@ -9,9 +9,7 @@ const {
   depoly,
 } = require('../models/branch');
 const type = require('../utils/type');
-const WS = require('../utils/ws');
-
-const socket = new WS();
+const socket = require('../utils/ws')();
 
 const handleGetBranchList = async ({ query, response }) => {
   const { path: pathToRepo } = query;
