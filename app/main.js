@@ -6,8 +6,8 @@ const bodyParser = require('koa-bodyparser');
 
 const app = new Koa();
 
-const httpServer = require('http').Server(app);
-const io = require('socket.io')(httpServer);
+const server = require('http').createServer(app.callback());
+const io = require('socket.io')(server);
 
 const controller = require('./controller');
 const Log = require('./utils/logger');
@@ -37,5 +37,7 @@ app.use(async (ctx, next) => {
 app.use(controller());
 
 const port = 9002;
-app.listen(port);
-Log.debug(`Listening on port ${port}`);
+server.listen(port, () => {
+  Log.debug(`Listening on port ${port}`);
+});
+// app.listen(port);
