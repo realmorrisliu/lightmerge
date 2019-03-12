@@ -21,7 +21,7 @@ const {
   hdel,
 } = require('../utils/redis');
 
-const Log = require('../utils/logger');
+const { WS_EVENT } = require('../../constants');
 const io = require('../utils/ws')();
 
 const getBranchList = async (pathToRepo) => {
@@ -53,59 +53,66 @@ const getRecentRepos = async () => {
 };
 
 const runLightmerge = async (path, list, baseBranch) => {
+  io.emit(WS_EVENT.CLEAR);
+
   const repo = await Repository.open(path);
   const baseCommit = await repo.getBranchCommit(baseBranch);
 
   const canWrite = await hsetnx(`${path}/lock`, 'lock', 1);
-  Log.debug(canWrite);
-  const CannotLightmerge = {
-    message: 'Other user is lightmerging, please wait!',
-  };
   if (canWrite === 0) {
-    throw CannotLightmerge;
+    io.emit(WS_EVENT.MESSAGE, 'Other user is lightmerging, please wait!');
+  } else {
+    io.emit(WS_EVENT.MESSAGE, 'Start lightmerge');
   }
 
-  Log.debug(`Overwrite lightmerge with ${baseBranch}`);
-  await repo.createBranch('lightmerge', baseCommit, true);
+  io.emit(WS_EVENT.MESSAGE, `Overwrite lightmerge with ${baseBranch}`);
 
   const signature = Signature.default(repo);
   let conflictFiles;
   let conflictBranch;
 
-  /* eslint-disable no-restricted-syntax */
-  for (const branch of list) {
-    try {
-      /* eslint-disable no-await-in-loop */
-      await repo.mergeBranches(
-        'lightmerge',
-        branch,
-        signature,
-        Merge.PREFERENCE.NO_FASTFORWARD,
-        null,
-      );
-    } catch (index) {
-      conflictBranch = branch;
+  try {
+    await repo.createBranch('lightmerge', baseCommit, true);
 
-      conflictFiles = [
-        ...new Set(
-          index
-            .entries()
-            .filter(entry => Index.entryIsConflict(entry))
-            .map(entry => entry.path),
-        ),
-      ];
+    /* eslint-disable no-restricted-syntax */
+    for (const branch of list) {
+      try {
+        /* eslint-disable no-await-in-loop */
+        await repo.mergeBranches(
+          'lightmerge',
+          branch,
+          signature,
+          Merge.PREFERENCE.NO_FASTFORWARD,
+          null,
+        );
+      } catch (index) {
+        conflictBranch = branch;
+
+        conflictFiles = [
+          ...new Set(
+            index
+              .entries()
+              .filter(entry => Index.entryIsConflict(entry))
+              .map(entry => entry.path),
+          ),
+        ];
+
+        io.emit(WS_EVENT.MESSAGE, `You have conflicts on file "${conflictFiles}" when merging branch "${conflictBranch}"`);
+      }
     }
+  } catch (e) {
+    io.emit(WS_EVENT.MESSAGE, e);
   }
 
   await hdel(`${path}/lock`, 'lock');
-
-  return { conflictBranch, conflictFiles };
 };
 
 const pullLatestCode = async (path, username, password) => {
+  io.emit(WS_EVENT.CLEAR);
+
   const repo = await Repository.open(path);
 
-  Log.debug('Pulling the latest code...');
+  io.emit(WS_EVENT.MESSAGE, 'Pulling latest code...');
   try {
     await repo.fetchAll({
       prune: Fetch.PRUNE.GIT_FETCH_PRUNE,
@@ -114,7 +121,7 @@ const pullLatestCode = async (path, username, password) => {
       },
     });
   } catch (e) {
-    Log.error(e);
+    io.emit(WS_EVENT.MESSAGE, e);
     return e;
   }
 
@@ -134,19 +141,23 @@ const pullLatestCode = async (path, username, password) => {
     await repo.createBranch(localBranch, remoteBranchCommit, true);
   });
 
+  io.emit(WS_EVENT.MESSAGE, 'Update to remote repository');
+
   return undefined;
 };
 
 const depoly = async (path) => {
+  io.emit(WS_EVENT.CLEAR);
+
   const repoName = path.split('/').pop();
   const script = `./deployScripts/${repoName}.sh`;
 
   const execDeployScript = spawn(script);
   execDeployScript.stdout.on('data', (data) => {
-    io.emit('deploy', data.toString());
+    io.emit(WS_EVENT.DEPLOY, data.toString());
   });
   execDeployScript.on('close', (code) => {
-    io.emit('deployDone', code);
+    io.emit(WS_EVENT.DEPLOY_DONE, code);
   });
 };
 

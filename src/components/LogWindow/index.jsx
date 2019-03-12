@@ -3,21 +3,27 @@ import { observer } from 'mobx-react';
 import store from '../../stores/RootStore';
 import styles from './LogWindow.module.scss';
 import { Socket } from '../../utils/network';
+import { WS_EVENT } from '../../../constants';
 
-Socket.on('deploy', (value) => {
-  const { log } = store;
+Socket.on(WS_EVENT.CLEAR, () => {
+  store.log.resetLogs();
+});
+
+Socket.on(WS_EVENT.DEPLOY, (value) => {
   value
     .split('\n')
     .filter(line => line.length !== 0)
     .forEach((line) => {
-      log.addLog(line);
+      store.log.addLog(line);
     });
 });
 
-Socket.on('deployDone', (value) => {
-  const { repo } = store;
-  console.log(value);
-  repo.resetDeploy();
+Socket.on(WS_EVENT.DEPLOY_DONE, () => {
+  store.repo.resetDeploy();
+});
+
+Socket.on(WS_EVENT.MESSAGE, (value) => {
+  store.log.addLog(value);
 });
 
 @observer

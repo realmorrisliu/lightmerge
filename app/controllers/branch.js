@@ -45,28 +45,12 @@ const handlePostBranchLightmerge = async ({ request, response }) => {
 
   setSelectedBranchList(path, list);
 
-  try {
-    const { conflictBranch, conflictFiles } = await runLightmerge(path, list, base);
+  await runLightmerge(path, list, base);
 
-    if (type.isUndefined(conflictFiles)) {
-      response.body = {
-        code: 200,
-        message: 'success',
-      };
-    } else {
-      response.body = {
-        code: 200,
-        message: 'failed',
-        error: `You have conflicts on file "${conflictFiles}" when merging branch "${conflictBranch}"`,
-      };
-    }
-  } catch (e) {
-    response.body = {
-      code: 200,
-      message: 'failed',
-      error: e.message,
-    };
-  }
+  response.body = {
+    code: 200,
+    message: 'success',
+  };
 };
 
 const handleGetRecentRepos = async ({ response }) => {
