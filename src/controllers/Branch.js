@@ -1,4 +1,4 @@
-import { Get, Post, Socket } from '../utils/network';
+import { Get, Post } from '../utils/network';
 import Auth from '../utils/auth';
 import store from '../stores/RootStore';
 
@@ -10,14 +10,6 @@ const API = {
   pullLatestCode: '/repo/pull',
   deploy: '/deploy',
 };
-
-Socket.on('connect', () => {
-  console.log('client connect server');
-});
-
-Socket.on('disconnect', () => {
-  console.log('client disconnect');
-});
 
 const getBranchList = async () => new Promise((resolve) => {
   Get(API.getBranchList, {

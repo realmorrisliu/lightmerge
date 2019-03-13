@@ -130,8 +130,8 @@
       "node"
     ],
     "watchPlugins": [
-      "/Users/liuyimeng/Projects/lightmerge/node_modules/jest-watch-typeahead/filename.js",
-      "/Users/liuyimeng/Projects/lightmerge/node_modules/jest-watch-typeahead/testname.js"
+      "./node_modules/jest-watch-typeahead/filename.js",
+      "./node_modules/jest-watch-typeahead/testname.js"
     ]
   },
   "babel": {
