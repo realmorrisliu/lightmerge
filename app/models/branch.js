@@ -121,6 +121,7 @@ const pullLatestCode = async (path, username, password) => {
   io.emit(WS_EVENT.CLEAR);
 
   const repo = await Repository.open(path);
+  repo.checkoutBranch('master', {});
 
   io.emit(WS_EVENT.MESSAGE, 'Pulling latest code...');
   try {
