@@ -154,7 +154,6 @@ const pullLatestCode = async (path, username, password) => {
   });
 
   io.emit(WS_EVENT.MESSAGE, 'Update to remote repository');
-  repo.checkoutBranch('lightmerge', {});
 
   return undefined;
 };
