@@ -57,6 +57,7 @@ const runLightmerge = async (path, list, baseBranch) => {
 
   const repo = await Repository.open(path);
   const baseCommit = await repo.getBranchCommit(baseBranch);
+  repo.checkoutBranch('master', {});
 
   const canWrite = await hsetnx(`${path}/lock`, 'lock', 1);
   if (canWrite === 0) {
@@ -153,6 +154,7 @@ const pullLatestCode = async (path, username, password) => {
   });
 
   io.emit(WS_EVENT.MESSAGE, 'Update to remote repository');
+  repo.checkoutBranch('lightmerge', {});
 
   return undefined;
 };
