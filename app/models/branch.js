@@ -164,7 +164,7 @@ const depoly = async (path) => {
   const repoName = path.split('/').pop();
   const script = `./deployScripts/${repoName}.sh`;
 
-  const execDeployScript = spawn(script);
+  const execDeployScript = spawn(script, [], { shell: true });
   execDeployScript.stdout.on('data', (data) => {
     io.emit(WS_EVENT.DEPLOY, data.toString());
   });
